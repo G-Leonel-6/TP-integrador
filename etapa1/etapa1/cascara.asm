@@ -145,7 +145,11 @@ salir_int_timer1:
 r_complete:
 	ldi ESTADO, RECIBIDO
 	lds DATO, UDR0
+	cpi DATO, 'N'
+	brne salir_r
+conf_timer:
 	rcall timer1_conf
+salir_r:
 	reti
 
 t_complete:

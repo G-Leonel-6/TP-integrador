@@ -27,13 +27,15 @@
   <main><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>54</LINE></main>
   <int_timer1><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>125</LINE></int_timer1>
   <r_complete><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>145</LINE></r_complete>
-  <t_complete><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>151</LINE></t_complete>
+  <t_complete><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>155</LINE></t_complete>
   <timer1_conf><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>113</LINE></timer1_conf>
   <USART_init><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>99</LINE></USART_init>
   <main_loop><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>86</LINE></main_loop>
   <conf_IO><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>90</LINE></conf_IO>
   <fin_espera><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>135</LINE></fin_espera>
   <salir_int_timer1><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>142</LINE></salir_int_timer1>
-  <tabla><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>156</LINE></tabla>
+  <salir_r><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>152</LINE></salir_r>
+  <conf_timer><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>150</LINE></conf_timer>
+  <tabla><FILE>C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm</FILE><LINE>160</LINE></tabla>
  </LABELS>
 </ASSEMBLER_INFO>

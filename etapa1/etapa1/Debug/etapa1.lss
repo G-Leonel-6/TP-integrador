@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm Fri Jun 14 20:01:21 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm Fri Jun 14 20:09:59 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm(8): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
@@ -1041,7 +1041,7 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm(8): Inclu
                                  ; Constantes del programa
                                  .equ	ESPERANDO = 1; Numero constante
                                  .equ	RECIBIDO = 2
-                                 .equ	CANT = 7
+                                 .equ	CANT = 6
                                  ; Alias de los registros
                                  .def	DATO = r18
                                  .def	AUX1 = r16
@@ -1077,7 +1077,7 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm(8): Inclu
 000024 c04e                      	rjmp r_complete
                                  
                                  .org UTXCaddr
-000028 c04f                      	rjmp t_complete
+000028 c051                      	rjmp t_complete
                                  
                                  
                                  
@@ -1150,7 +1150,7 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm(8): Inclu
 00005a 9300 0089                 	sts OCR1AH, r16
 00005c e804                      	ldi r16, low(7812)	
 00005d 9300 0088                 	sts OCR1AL, r16
-00005f e017                      	ldi CONT, CANT
+00005f e016                      	ldi CONT, CANT
 000060 9508                      	ret
                                  
                                  int_timer1:
@@ -1176,27 +1176,31 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm(8): Inclu
                                  r_complete:
 000073 e032                      	ldi ESTADO, RECIBIDO
 000074 9120 00c6                 	lds DATO, UDR0
-000076 dfdc                      	rcall timer1_conf
-000077 9518                      	reti
-                                 
-                                 t_complete:
-000078 e031                      	ldi ESTADO, ESPERANDO
+000076 342e                      	cpi DATO, 'N'
+000077 f409                      	brne salir_r
+                                 conf_timer:
+000078 dfda                      	rcall timer1_conf
+                                 salir_r:
 000079 9518                      	reti
                                  
+                                 t_complete:
+00007a e031                      	ldi ESTADO, ESPERANDO
+00007b 9518                      	reti
+                                 
                                  ; Definicion de tabla en memoria de codigo
-00007a 7345
-00007b 6f74
-00007c 6520
-00007d 2073
-00007e 6e75
-00007f 2061
-000080 6174
-000081 6c62
-000082 2061
-000083 6f63
-000084 736e
-000085 6174
-000086 746e
+00007c 7345
+00007d 6f74
+00007e 6520
+00007f 2073
+000080 6e75
+000081 2061
+000082 6174
+000083 6c62
+000084 2061
+000085 6f63
+000086 736e
+000087 6174
+000088 746e
 
 
 RESOURCE USE INFORMATION
@@ -1216,7 +1220,7 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  33 r17:   6 r18:   2 r19:   2 r20:   0 
+r13:   0 r14:   0 r15:   0 r16:  33 r17:   6 r18:   3 r19:   2 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
 Registers used: 4 out of 35 (11.4%)
@@ -1226,11 +1230,11 @@ Registers used: 4 out of 35 (11.4%)
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   2 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   0 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
+cpi   :   1 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 jmp   :   0 
 ld    :   0 ldd   :   0 ldi   :  16 lds   :   2 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
@@ -1241,12 +1245,12 @@ sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  11 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 15 out of 113 (13.3%)
+Instructions used: 17 out of 113 (15.0%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000110    148     28    176   32768   0.5%
+[.cseg] 0x000000 0x000114    152     28    180   32768   0.5%
 [.dseg] 0x000100 0x000101      0      1      1    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

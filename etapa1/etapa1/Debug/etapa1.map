@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm Fri Jun 14 20:01:21 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa1\etapa1\cascara.asm Fri Jun 14 20:09:59 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -697,7 +697,7 @@ EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
 EQU  ESPERANDO    00000001
 EQU  RECIBIDO     00000002
-EQU  CANT         00000007
+EQU  CANT         00000006
 DEF  DATO         r18
 DEF  AUX1         r16
 DEF  CONT         r17
@@ -706,11 +706,13 @@ DSEG var1         00000100
 CSEG main         00000034
 CSEG int_timer1   00000061
 CSEG r_complete   00000073
-CSEG t_complete   00000078
+CSEG t_complete   0000007a
 CSEG timer1_conf  00000053
 CSEG USART_init   00000046
 CSEG main_loop    0000003e
 CSEG conf_IO      0000003f
 CSEG fin_espera   00000069
 CSEG salir_int_timer1 00000072
-CSEG tabla        0000007a
+CSEG salir_r      00000079
+CSEG conf_timer   00000078
+CSEG tabla        0000007c
