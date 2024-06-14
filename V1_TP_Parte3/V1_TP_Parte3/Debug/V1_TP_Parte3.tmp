@@ -1,0 +1,42 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.2.8</VERSION>
+ <DEVICE>"ATmega328P"</DEVICE>
+ <WORKING_DIR>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\Debug</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
+  <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
+  <DIR></DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc</FILE>
+  <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\Debug\V1_TP_Parte3.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>V1_TP_Parte3.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>V1_TP_Parte3.map</FILE>
+  <FILE>V1_TP_Parte3.lss</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <original_nums><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>32</LINE></original_nums>
+  <users_guess><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>33</LINE></users_guess>
+  <main><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>42</LINE></main>
+  <inicializar_registros><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>56</LINE></inicializar_registros>
+  <leer_numero_serial><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>67</LINE></leer_numero_serial>
+  <chequeos><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>94</LINE></chequeos>
+  <error><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>164</LINE></error>
+  <comparar_numero><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>110</LINE></comparar_numero>
+  <loop1><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>123</LINE></loop1>
+  <loop2><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>131</LINE></loop2>
+  <sigo_1><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>141</LINE></sigo_1>
+  <rojo_0><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>139</LINE></rojo_0>
+  <fin_loop_1><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>147</LINE></fin_loop_1>
+  <seteo_luces><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>153</LINE></seteo_luces>
+  <fin><FILE>C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm</FILE><LINE>165</LINE></fin>
+ </LABELS>
+</ASSEMBLER_INFO>
