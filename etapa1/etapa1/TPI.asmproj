@@ -12,7 +12,7 @@
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <Language>ASSEMBLY</Language>
     <AssemblyName>etapa1</AssemblyName>
-    <Name>etapa1</Name>
+    <Name>TPI</Name>
     <RootNamespace>etapa1</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <EntryFile>$(MSBuildProjectDirectory)\cascara.asm</EntryFile>
