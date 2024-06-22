@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm Fri Jun 14 10:52:55 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm Sat Jun 22 11:03:04 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\Julieta\Documents\ejs assembly\V1_TP_Parte3\V1_TP_Parte3\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
                                  .include "m328pdef.inc"
                                  

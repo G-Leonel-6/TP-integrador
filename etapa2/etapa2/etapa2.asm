@@ -10,7 +10,7 @@
  
 ; Constantes del programa
 .equ	CANT = 6 ; Numero constante
-.equ	IZQUIERDA_V = 0
+.equ	IZQUIERDA_V = 0x05
 .equ	DERECHA_V = 0xff
 .equ	N_POSICIONES = 10
 .equ	N_SELECCIONADOS = 4
@@ -26,6 +26,7 @@
 .def	POS = r19
 .def	AUX2 = r20
 .def	RESTANTES_A_SELECCIONAR = r21
+.def	CONT2 = r22
 
 
 .dseg
@@ -48,11 +49,13 @@ cifras_ram:		.byte	10
 .org ADCCaddr
 	rjmp adc_complete
 
+.org OVF0addr
+	rjmp seleccion
+
 .org OC1Aaddr
 	rjmp int_timer1
 
-.org OC0Aaddr
-	rjmp seleccion
+
 
 .org INT_VECTORS_SIZE
 main:
@@ -66,23 +69,11 @@ main:
 	
 	rcall conf_IO
 	rcall conf_int0
-	rcall apuntar_inicio_cifras
-	rcall cargar_cifras_a_ram
 	rcall apuntar_inicio_posiciones
 	rcall cargar_posiciones_a_ram
 
 
 	rcall conf_estado_inicial
-
-	in AUX1, PORTB
-	andi AUX1, ALTA
-	or AUX1, DATO
-	out PORTB, AUX1
-
-	in AUX1, PORTC
-	andi AUX1, ALTA
-	or AUX1, POS
-	out PORTC, AUX1
 
 	rcall conf_ADC
 	rcall timer1_conf_B
@@ -97,14 +88,13 @@ main_loop:
 
 conf_estado_inicial:
 
-	rcall apuntar_inicio_cifras_ram
 	rcall apuntar_inicio_posiciones_ram
 
 	ldi YH, high(seleccionados)
 	ldi YL, low(seleccionados)
 
 	ldi RESTANTES_A_SELECCIONAR, N_SELECCIONADOS
-
+	clr DATO
 	ret
 
 conf_int0:
@@ -125,53 +115,53 @@ conf_IO:
 	out DDRB, AUX1
 	out DDRC, AUX1
 	
-	clr AUX1
+	ldi AUX1,ALTA
 	
 	out PORTB, AUX1
 	out PORTC, AUX1
 	ret
 
 timer1_conf_A:
-	lds AUX1, TIMSK1
-	ori AUX1, (1<<OCIE1A)
+	ldi AUX1, (1<<OCIE1A)
 	sts TIMSK1, AUX1	
-	ldi CONT, CANT
+	ldi CONT2, CANT
 	ret
 
 timer1_conf_B:
-	ldi r16, high(7811)
-	sts OCR1BH, r16
-	ldi r16, low(7811)	
-	sts OCR1BL, r16
+	ldi AUX1, high(7811)
+	sts OCR1BH, AUX1
+	ldi AUX1, low(7811)	
+	sts OCR1BL, AUX1
 
-	ldi r16, high(7812)
-	sts OCR1AH, r16
-	ldi r16, low(7812)	
-	sts OCR1AL, r16
+	ldi AUX1, high(7812)
+	sts OCR1AH, AUX1
+	ldi AUX1, low(7812)	
+	sts OCR1AL, AUX1
 
-	ldi r16, (1<<OCIE1B);
-	sts TIMSK1, r16
+	ldi AUX1, (1<<OCIE1B);
+	sts TIMSK1, AUX1
 
 	ldi r16, (1<<WGM12)|(1<<CS12)|(1<<CS10)
-	sts TCCR1B, r16
+	sts TCCR1B, AUX1
 
 	ret
 
 timer_0_conf_delay:
-	ldi AUX2, (2<<WGM00)
-	out TCCR0A, AUX1
+	ldi AUX2, (1<<WGM00)
+	out TCCR0A, AUX2
 
-;	ldi AUX1, (1<<OCF0A)
-;	out TIFR0, AUX1			; limpio flag en caso de ser necesario
+	; AUX1, (1<<OCF0A)
+	;out TIFR0, AUX1			; limpio flag en caso de ser necesario
 
-	ldi AUX2,(1<<OCIE0A)
-	sts TIMSK0, AUX1
+	ldi AUX2,(1<<TOV0)
+	sts TIMSK0, AUX2
 
-	ldi AUX2, 255
-	sts OCR0A, AUX1
+;	ldi AUX2, 255
+;	sts OCR0A, AUX2
 
 	ldi AUX2, (5<<CS00)
-	out TCCR0B, AUX1
+	out TCCR0B, AUX2
+
 	ret
 
 conf_ADC:
@@ -189,44 +179,37 @@ conf_ADC:
 mover_a_izquierda:
 	cpi CONT, 0
 	brne seguir_izquierda
-	rcall apuntar_final_cifras_ram
 	rcall apuntar_final_posiciones_ram
-
-	cpi POS, OCUPADO
-	brne salir_mover_a_izquierda
+	cpi POS, VACIO
+	breq salir_mover_a_izquierda
 
 seguir_izquierda: 
-	ld AUX1, -Z
 	ld POS, -X
 	dec CONT
 	cpi POS, OCUPADO
 	breq mover_a_izquierda
-	mov DATO, AUX1
-	rjmp salir_adc
 
-salir_mover_a_izquierda:
+salir_mover_a_izquierda:	
+	mov DATO, CONT
 	ret
 
 mover_a_derecha:
-	cpi CONT, N_POSICIONES
+	cpi CONT, N_POSICIONES-1
 	brne seguir_derecha
-	rcall apuntar_inicio_cifras_ram
 	rcall apuntar_inicio_posiciones_ram
 
 	cpi POS, OCUPADO
 	brne salir_mover_derecha
 
 seguir_derecha:
-	adiw ZH:ZL, 1
-	adiw XH:XL, 1
-	ld AUX1, Z
+	ld POS, X+
 	ld POS, X
 	inc CONT
 	cpi POS, OCUPADO
 	breq mover_a_derecha
-	mov DATO, AUX1
 
 salir_mover_derecha:
+	mov DATO, CONT
 	ret
 ;-----------------------------------------------------------****-----------------------------------------------------
 apuntar_inicio_posiciones:
@@ -249,68 +232,39 @@ loop:
 salir_cargar:	
 	ret
 
-apuntar_inicio_cifras:
-	ldi ZH, high(cifras<<1)
-	ldi ZL, low(cifras<<1)
-
-	ldi XH, high(cifras_ram)
-	ldi XL, low(cifras_ram)
-
-	ret
-
-cargar_cifras_a_ram:
-	ldi CONT, N_POSICIONES
-loop_cifras:
-	lpm AUX1, Z+
-	st X+, AUX1
-	dec CONT
-	breq salir_cargar_cifras
-	rjmp loop_cifras
-salir_cargar_cifras:	
-	ret
-
 apuntar_inicio_posiciones_ram:
 	ldi XH, high(posiciones_ram)
 	ldi XL, low(posiciones_ram)
 
+	ldi CONT, 0
 	ld POS, X
 	ret
 
 apuntar_final_posiciones_ram:
-	ldi XH, high(posiciones_ram+N_POSICIONES)
-	ldi XL, low(posiciones_ram+N_POSICIONES)
+	ldi XH, high(posiciones_ram+N_POSICIONES-1)
+	ldi XL, low(posiciones_ram+N_POSICIONES-1)
 	
+	ldi CONT, N_POSICIONES-1
 	ld POS, X
 	ret
 
-apuntar_inicio_cifras_ram:
-	ldi ZH, high(cifras_ram)
-	ldi ZL, low(cifras_ram)
-
-	ldi CONT, 0
-	ld DATO, Z
-	ret
-
-apuntar_final_cifras_ram:
-	ldi ZH, high(cifras_ram+N_POSICIONES)
-	ldi ZL, low(cifras_ram+N_POSICIONES)
-	
-	ldi CONT, N_POSICIONES
-	ld DATO, Z
-	ret
 
 ;------------------------------------------------------****--------------------------------------------------------------
 
 
 guardar_dato:
 	st Y+, DATO
-	ldi AUX1, OCUPADO
-	st X, AUX1
+	ldi AUX2, OCUPADO
+	st X, AUX2
 	dec RESTANTES_A_SELECCIONAR
 
 	ret
 
-salir_etapa:
+/*salir_etapa:
+	ldi AUX1, ALTA
+	out PORTC, AUX1
+	out PORTB, AUX1
+
 	ldi DATO, 'J'
 	rcall timer1_conf_A
 
@@ -318,16 +272,12 @@ salir_etapa:
 	sts ADCSRA, AUX1	; desactivo adc
 	out EIMSK, AUX1		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
 
-
-	ret
+	ret*/
 
 adc_complete:
-	ldi AUX1, (1<<OCF0B)
-	out TIFR0, AUX1	
-
 	lds AUX1, ADCH
 	cpi AUX1, IZQUIERDA_V
-	breq izquierda
+	brlo izquierda
 	cpi AUX1, DERECHA_V
 	breq derecha
 	rjmp salir_adc
@@ -339,19 +289,11 @@ derecha:
 	rcall mover_a_derecha
 
 salir_adc:
-	andi DATO, BAJA
-	in AUX1, PORTB
-	andi AUX1, ALTA
-	or AUX1, DATO
-	out PORTB, AUX1
 
+	out PORTB, DATO
 	ldi AUX2, N_SELECCIONADOS
 	sub AUX2, RESTANTES_A_SELECCIONAR
-	in AUX1, PORTC
-	andi AUX1, ALTA
-	or AUX1, AUX2
-	out PORTC, AUX1
-
+	out PORTC, AUX2
 	reti 
 
 boton:
@@ -362,10 +304,30 @@ seleccion:
 	sbic PIND, 2
 	rjmp salir_seleccion
 
-	rcall guardar_dato
-	rcall mover_a_derecha
-	cpi RESTANTES_A_SELECCIONAR, 0
-	brne salir_seleccion
+interrupcion:
+	clr AUX1
+	out TCCR0B, AUX1
+
+	dec RESTANTES_A_SELECCIONAR
+
+	breq salir_etapa
+	rjmp salir_seleccion
+
+salir_etapa:
+;	ldi DATO, 'J'
+	clr AUX1
+	out PORTC, AUX1
+	out PORTB, AUX1
+	rcall timer1_conf_A
+
+;	clr AUX1
+;	sts ADCSRA, AUX1	; desactivo adc
+	out EIMSK, AUX1		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
+	
+;	rcall guardar_dato
+;	rcall mover_a_derecha
+;	cpi RESTANTES_A_SELECCIONAR, 0
+;	brne salir_seleccion
 ;	rcall salir_etapa
 
 salir_seleccion:
@@ -382,10 +344,6 @@ int_timer1:
 	breq fin_espera
 	rjmp salir_int_timer1
 fin_espera:	
-	lds r17, UCSR0A		
-	sbrs r17, UDRE0		; corroboro que el buffer este vacio 
-	rjmp fin_espera
-	sts UDR0, DATO		; envio dato por uart
 	clr AUX1
 	sts TCCR1B, AUX1	; desactivo timer 1 para que no produzca nuevas interrupciones y consumir menos energia 
 salir_int_timer1:

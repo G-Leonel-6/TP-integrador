@@ -15,7 +15,7 @@
     <Name>etapa2</Name>
     <RootNamespace>etapa2</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\etapa2.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\etapa2_V2.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -83,7 +83,13 @@
     <Compile Include="Adc.asm">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="boton.asm">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="etapa2.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="etapa2_V2.asm">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main.asm">
