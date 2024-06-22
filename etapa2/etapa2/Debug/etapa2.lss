@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm Sat Jun 22 10:37:12 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm Sat Jun 22 12:20:08 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
@@ -1086,13 +1086,11 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): In
 000012 c0c2                      	rjmp seleccion
                                  
                                  .org OC1Aaddr
-000016 c0c6                      	rjmp int_timer1
+000016 c0d5                      	rjmp int_timer1
                                  
-                                 .org OC1BAddr
-000018 c0c3                      	rjmp int_timer1B
                                  
                                  .org ADCCaddr
-00002a c092                      	rjmp adc_complete
+00002a c095                      	rjmp adc_complete
                                  
                                  .org INT_VECTORS_SIZE
                                   main:
@@ -1104,15 +1102,14 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): In
 000036 ef0f                      	ldi		r16,LOW(RAMEND)
 000037 bf0d                      	out		spl,r16
                                  
-000038 d055                      	rcall apuntar_inicio_posiciones
-000039 d059                      	rcall cargar_posiciones_a_ram
+000038 d056                      	rcall apuntar_inicio_posiciones
+000039 d05a                      	rcall cargar_posiciones_a_ram
                                  
-00003a d012                      	rcall conf_IO
-00003b d00b                      	rcall conf_int0
-                                 ;	rcall conf_ADC
-00003c d033                      	rcall timer1_conf_B
-00003d d003                      	rcall conf_estado_inicial
-00003e e061                      	ldi ESTADO, MEDIO
+00003a d013                      	rcall conf_IO
+00003b d00c                      	rcall conf_int0
+00003c d048                      	rcall conf_ADC
+00003d d033                      	rcall timer1_conf_B
+00003e d002                      	rcall conf_estado_inicial
                                  
 00003f 9478                      	sei
                                  main_loop:
@@ -1121,285 +1118,264 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): In
                                  
                                  conf_estado_inicial:
                                  
-000041 d058                      	rcall apuntar_inicio_posiciones_ram
+000041 d059                      	rcall apuntar_inicio_posiciones_ram
                                  
 000042 e0d1                      	ldi YH, high(seleccionados)
 000043 e0ca                      	ldi YL, low(seleccionados)
                                  
 000044 e054                      	ldi RESTANTES_A_SELECCIONAR, N_SELECCIONADOS
 000045 e020                      	ldi DATO, 0
-                                 
-000046 9508                      	ret
+000046 e061                      	ldi ESTADO, MEDIO
+000047 9508                      	ret
                                  
                                  
                                  conf_int0:
-000047 e002                      	ldi AUX1, (2<<ISC00)
-000048 9300 0069                 	sts EICRA, AUX1
+000048 e002                      	ldi AUX1, (2<<ISC00)
+000049 9300 0069                 	sts EICRA, AUX1
                                  
-00004a e001                      	ldi AUX1, (1<<INT0)
-00004b bb0d                      	out EIMSK, AUX1
+00004b e001                      	ldi AUX1, (1<<INT0)
+00004c bb0d                      	out EIMSK, AUX1
                                  
-00004c 9508                      	ret
+00004d 9508                      	ret
                                  
                                  conf_IO:
-00004d 2700                      	clr AUX1
-00004e b90a                      	out DDRD, AUX1
-00004f e004                      	ldi AUX1, (1<<PD2)
-000050 b90b                      	out PORTD, AUX1
-000051 e00f                      	ldi AUX1, BAJA
-000052 b904                      	out DDRB, AUX1
-000053 b907                      	out DDRC, AUX1
+00004e 2700                      	clr AUX1
+00004f b90a                      	out DDRD, AUX1
+000050 e004                      	ldi AUX1, (1<<PD2)
+000051 b90b                      	out PORTD, AUX1
+000052 e00f                      	ldi AUX1, BAJA
+000053 b904                      	out DDRB, AUX1
+000054 b907                      	out DDRC, AUX1
                                  	
-000054 2700                      	clr AUX1
+000055 2700                      	clr AUX1
                                  	
-000055 b905                      	out PORTB, AUX1
-000056 b908                      	out PORTC, AUX1
-000057 9508                      	ret
+000056 b905                      	out PORTB, AUX1
+000057 b908                      	out PORTC, AUX1
+000058 9508                      	ret
                                  
-                                 timer_0_conf_delay:
-000058 e041                      	ldi AUX2, (1<<WGM00)
-000059 9340 00b0                 	sts TCCR2A, AUX2
+                                 timer_2_conf_delay:
+000059 e041                      	ldi AUX2, (1<<WGM00)
+00005a 9340 00b0                 	sts TCCR2A, AUX2
                                  
-                                 	; AUX1, (1<<OCF0A)
-                                 	;out TIFR0, AUX1			; limpio flag en caso de ser necesario
-                                 
-00005b e041                      	ldi AUX2,(1<<TOIE0)
-00005c 9340 0070                 	sts TIMSK2, AUX2
-                                 
-                                 ;	ldi AUX2, 255
-                                 ;	sts OCR0A, AUX2
-                                 
-00005e e045                      	ldi AUX2, (5<<CS00)
-00005f 9340 00b1                 	sts TCCR2B, AUX2
+00005c e041                      	ldi AUX2,(1<<TOIE0)
+00005d 9340 0070                 	sts TIMSK2, AUX2
                                  
                                  
+00005f e045                      	ldi AUX2, (5<<CS00)
+000060 9340 00b1                 	sts TCCR2B, AUX2
                                  
-000061 9508                      	ret
+000062 9508                      	ret
                                  
                                  timer1_conf_A:
-000062 e14e                      	ldi AUX2, high(7812)
-000063 9340 0089                 	sts OCR1AH, AUX2
-000065 e844                      	ldi AUX2, low(7812)	
-000066 9340 0088                 	sts OCR1AL, AUX2
+000063 e14e                      	ldi AUX2, high(7812)
+000064 9340 0089                 	sts OCR1AH, AUX2
+000066 e844                      	ldi AUX2, low(7812)	
+000067 9340 0088                 	sts OCR1AL, AUX2
                                  
-000068 e042                      	ldi AUX2, (1<<OCIE1A)
-000069 9300 006f                 	sts TIMSK1, AUX1	
-00006b e04d                      	ldi AUX2, (1<<WGM12)|(1<<CS12)|(1<<CS10)
-00006c 9340 0081                 	sts TCCR1B, AUX2
-00006e e016                      	ldi CONT, CANT
-00006f 9508                      	ret
+000069 e042                      	ldi AUX2, (1<<OCIE1A)
+00006a 9340 006f                 	sts TIMSK1, AUX2	
+00006c e04d                      	ldi AUX2, (1<<WGM12)|(1<<CS12)|(1<<CS10)
+00006d 9340 0081                 	sts TCCR1B, AUX2
+00006f e016                      	ldi CONT, CANT
+000070 9508                      	ret
                                  
                                  timer1_conf_B:
-000070 e10e                      	ldi AUX1, high(7811)
-000071 9300 008b                 	sts OCR1BH, AUX1
-000073 e803                      	ldi AUX1, low(7811)	
-000074 9300 008a                 	sts OCR1BL, AUX1
+000071 e10e                      	ldi AUX1, high(7811)
+000072 9300 008b                 	sts OCR1BH, AUX1
+000074 e803                      	ldi AUX1, low(7811)	
+000075 9300 008a                 	sts OCR1BL, AUX1
                                  
-000076 e10e                      	ldi AUX1, high(7811)
-000077 9300 0089                 	sts OCR1AH, AUX1
-000079 e803                      	ldi AUX1, low(7811)	
-00007a 9300 0088                 	sts OCR1AL, AUX1
+000077 e10e                      	ldi AUX1, high(7812)
+000078 9300 0089                 	sts OCR1AH, AUX1
+00007a e804                      	ldi AUX1, low(7812)	
+00007b 9300 0088                 	sts OCR1AL, AUX1
                                  
-00007c e004                      	ldi AUX1, (1<<OCIE1B);
-00007d 9300 006f                 	sts TIMSK1, AUX1
+00007d e004                      	ldi AUX1, (1<<OCIE1B);
+00007e 9300 006f                 	sts TIMSK1, AUX1
                                  
-00007f e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)
-000080 9300 0081                 	sts TCCR1B, AUX1
+000080 e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)
+000081 9300 0081                 	sts TCCR1B, AUX1
                                  
-000082 2700                      	clr AUX1
+000083 2700                      	clr AUX1
                                  
-000083 9508                      	ret
+000084 9508                      	ret
                                  
                                  conf_ADC:
-000084 e604                      	ldi AUX1, (1<<REFS0)|(1<<ADLAR)|(1<<MUX2)
-000085 9300 007c                 	sts ADMUX, AUX1
+000085 e604                      	ldi AUX1, (1<<REFS0)|(1<<ADLAR)|(1<<MUX2)
+000086 9300 007c                 	sts ADMUX, AUX1
                                  
-000087 e005                      	ldi AUX1, (1<<ADTS2)|(1<<ADTS0)
-000088 9300 007b                 	sts ADCSRB, AUX1
+000088 e005                      	ldi AUX1, (1<<ADTS2)|(1<<ADTS0)
+000089 9300 007b                 	sts ADCSRB, AUX1
                                  
-00008a ee0b                      	ldi AUX1, (1<<ADEN)|(1<<ADSC)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS1)|(1<<ADPS0)
-00008b 9300 007a                 	sts ADCSRA, AUX1
+00008b ee0b                      	ldi AUX1, (1<<ADEN)|(1<<ADSC)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS1)|(1<<ADPS0)
+00008c 9300 007a                 	sts ADCSRA, AUX1
                                  
-00008d 9508                      	ret
+00008e 9508                      	ret
                                  
                                  apuntar_inicio_posiciones:
-00008e e0f1                      	ldi ZH, high(posiciones<<1)
-00008f ede2                      	ldi ZL, low(posiciones<<1)
+00008f e0f1                      	ldi ZH, high(posiciones<<1)
+000090 efe0                      	ldi ZL, low(posiciones<<1)
                                  
-000090 e0b1                      	ldi XH, high(posiciones_ram)
-000091 e0a0                      	ldi XL, low(posiciones_ram)
+000091 e0b1                      	ldi XH, high(posiciones_ram)
+000092 e0a0                      	ldi XL, low(posiciones_ram)
                                  
-000092 9508                      	ret
+000093 9508                      	ret
                                  
                                  cargar_posiciones_a_ram:
-000093 e01a                      	ldi CONT, N_POSICIONES
+000094 e01a                      	ldi CONT, N_POSICIONES
                                  loop:
-000094 9105                      	lpm AUX1, Z+
-000095 930d                      	st X+, AUX1
-000096 951a                      	dec CONT
-000097 f009                      	breq salir_cargar
-000098 cffb                      	rjmp loop
+000095 9105                      	lpm AUX1, Z+
+000096 930d                      	st X+, AUX1
+000097 951a                      	dec CONT
+000098 f009                      	breq salir_cargar
+000099 cffb                      	rjmp loop
                                  salir_cargar:	
-000099 9508                      	ret
-                                 
-                                 
+00009a 9508                      	ret
                                  
                                  apuntar_inicio_posiciones_ram:
-00009a e0b1                      	ldi XH, high(posiciones_ram)
-00009b e0a0                      	ldi XL, low(posiciones_ram)
+00009b e0b1                      	ldi XH, high(posiciones_ram)
+00009c e0a0                      	ldi XL, low(posiciones_ram)
                                  
-00009c e010                      	ldi CONT, 0
-00009d 913c                      	ld POS, X
-00009e 9508                      	ret
+00009d e010                      	ldi CONT, 0
+00009e 913c                      	ld POS, X
+00009f 9508                      	ret
                                  
                                  apuntar_final_posiciones_ram:
-00009f e0b1                      	ldi XH, high(posiciones_ram+N_POSICIONES-1)
-0000a0 e0a9                      	ldi XL, low(posiciones_ram+N_POSICIONES-1)
+0000a0 e0b1                      	ldi XH, high(posiciones_ram+N_POSICIONES-1)
+0000a1 e0a9                      	ldi XL, low(posiciones_ram+N_POSICIONES-1)
                                  	
-0000a1 e019                      	ldi CONT, N_POSICIONES-1
-0000a2 913c                      	ld POS, X
-0000a3 9508                      	ret
+0000a2 e019                      	ldi CONT, N_POSICIONES-1
+0000a3 913c                      	ld POS, X
+0000a4 9508                      	ret
                                  
+                                 guardar_dato:
+0000a5 9329                      	st Y+, DATO
+0000a6 e041                      	ldi AUX2, OCUPADO
+0000a7 934c                      	st X, AUX2
+0000a8 9508                      	ret
                                  
                                  mover_a_derecha:
-0000a4 3019                      	cpi CONT, N_POSICIONES-1
-0000a5 f421                      	brne seguir_derecha
-                                 ;	rcall apuntar_inicio_cifras_ram
-0000a6 dff3                      	rcall apuntar_inicio_posiciones_ram
-0000a7 e020                      	ldi DATO, 0
-0000a8 3030                      	cpi POS, VACIO
-0000a9 f031                      	breq salir_mover_derecha
+0000a9 3019                      	cpi CONT, N_POSICIONES-1
+0000aa f419                      	brne seguir_derecha
+0000ab dfef                      	rcall apuntar_inicio_posiciones_ram
+0000ac 3030                      	cpi POS, VACIO
+0000ad f029                      	breq salir_mover_derecha
                                  
                                  seguir_derecha:
-                                 	;ld AUX1, Z+
-0000aa 913d                      	ld POS, X+
-                                 ;	ld AUX1, Z
-0000ab 913c                      	ld POS, X
-0000ac 9513                      	inc CONT
-0000ad 3031                      	cpi POS, OCUPADO
-0000ae f3a9                      	breq mover_a_derecha
-0000af 2f21                      	mov DATO, CONT
-                                 
+0000ae 913d                      	ld POS, X+		; realizo incremento del puntero
+0000af 913c                      	ld POS, X		; dato que realmente me interesa
+0000b0 9513                      	inc CONT
+0000b1 3031                      	cpi POS, OCUPADO
+0000b2 f3b1                      	breq mover_a_derecha
+                                 	
                                  salir_mover_derecha:
-0000b0 9508                      	ret
+0000b3 2f21                      	mov DATO, CONT
+0000b4 9508                      	ret
                                  
                                  mover_a_izquierda:
-0000b1 3010                      	cpi CONT, 0
-0000b2 f421                      	brne seguir_izquierda
-                                 ;	rcall apuntar_final_cifras_ram
-0000b3 dfeb                      	rcall apuntar_final_posiciones_ram
-0000b4 e029                      	ldi DATO, 9
-0000b5 3030                      	cpi POS, VACIO
-0000b6 f029                      	breq salir_mover_a_izquierda
+0000b5 3010                      	cpi CONT, 0
+0000b6 f419                      	brne seguir_izquierda
+0000b7 dfe8                      	rcall apuntar_final_posiciones_ram
+0000b8 3030                      	cpi POS, VACIO
+0000b9 f021                      	breq salir_mover_a_izquierda
                                  
                                  seguir_izquierda: 
-                                 	;ld AUX1, -Z
-0000b7 913e                      	ld POS, -X
-0000b8 951a                      	dec CONT
-                                 ;	dec DATO
-0000b9 3031                      	cpi POS, OCUPADO
-0000ba f3b1                      	breq mover_a_izquierda
-0000bb 2f21                      	mov DATO, CONT
+0000ba 913e                      	ld POS, -X
+0000bb 951a                      	dec CONT
+0000bc 3031                      	cpi POS, OCUPADO
+0000bd f3b9                      	breq mover_a_izquierda
                                  
                                  salir_mover_a_izquierda:
-0000bc 9508                      	ret
+0000be 2f21                      	mov DATO, CONT
+0000bf 9508                      	ret
                                  
                                  adc_complete:
-                                 mover:
-                                 
-0000bd 9100 0079                 	lds AUX1, ADCH
-0000bf 3000                      	cpi AUX1, IZQUIERDA_V
-0000c0 f021                      	breq izquierda
-0000c1 3f0f                      	cpi AUX1, DERECHA_V
-0000c2 f039                      	breq derecha
-0000c3 e061                      	ldi ESTADO, MEDIO
-0000c4 c009                      	rjmp salir_adc
-                                 
+0000c0 9100 0079                 	lds AUX1, ADCH
+0000c2 3000                      	cpi AUX1, IZQUIERDA_V
+0000c3 f021                      	breq izquierda
+0000c4 3f0f                      	cpi AUX1, DERECHA_V
+0000c5 f039                      	breq derecha
+0000c6 e061                      	ldi ESTADO, MEDIO
+0000c7 c009                      	rjmp salir_adc
                                  izquierda:
-0000c5 3061                      	cpi ESTADO, MEDIO
-0000c6 f439                      	brne salir_adc
-0000c7 dfe9                      	rcall mover_a_izquierda
-0000c8 e060                      	ldi ESTADO, 0
-0000c9 c004                      	rjmp salir_adc
+0000c8 3061                      	cpi ESTADO, MEDIO		; el estado anterior del jostick debe ser el medio por motivos de robustez 
+0000c9 f439                      	brne salir_adc
+0000ca dfea                      	rcall mover_a_izquierda
+0000cb e060                      	ldi ESTADO, 0
+0000cc c004                      	rjmp salir_adc
                                  derecha:
-0000ca 3061                      	cpi ESTADO, MEDIO
-0000cb f411                      	brne salir_adc
-0000cc dfd7                      	rcall mover_a_derecha
-0000cd e060                      	ldi ESTADO, 0
+0000cd 3061                      	cpi ESTADO, MEDIO
+0000ce f411                      	brne salir_adc
+0000cf dfd9                      	rcall mover_a_derecha
+0000d0 e060                      	ldi ESTADO, 0 
                                  salir_adc:
-0000ce e004                      	ldi AUX1, N_SELECCIONADOS
-0000cf 1b05                      	sub AUX1, RESTANTES_A_SELECCIONAR
-0000d0 b908                      	out PORTC, AUX1
-0000d1 b925                      	out PORTB, DATO
+0000d1 b925                      	out PORTB, DATO 
 0000d2 9518                      	reti 
                                  
                                  boton:
-0000d3 df84                      	rcall timer_0_conf_delay
+0000d3 df85                      	rcall timer_2_conf_delay
                                  salir_boton:
 0000d4 9518                      	reti
                                  
                                  seleccion:
 0000d5 994a                      	sbic PIND, 2
-0000d6 c004                      	rjmp salir_seleccion
+0000d6 c014                      	rjmp salir_seleccion
                                  
                                  interrupcion:
 0000d7 2744                      	clr AUX2
 0000d8 9340 00b1                 	sts TCCR2B, AUX2
-                                 ;	sts TCCR1B, AUX2
-0000da 9a32                      	sbi PINC, 2
-                                 ;	dec RESTANTES_A_SELECCIONAR
                                  
-                                 ;	breq salir_etapa
-                                 ;	rjmp salir_seleccion
+0000da dfca                      	rcall guardar_dato
+0000db dfcd                      	rcall mover_a_derecha
+0000dc 955a                      	dec RESTANTES_A_SELECCIONAR
+0000dd e044                      	ldi AUX2, N_SELECCIONADOS
+0000de 1b45                      	sub AUX2, RESTANTES_A_SELECCIONAR
+0000df b948                      	out PORTC, AUX2
+0000e0 3050                      	cpi RESTANTES_A_SELECCIONAR, 0
+0000e1 f449                      	brne salir_seleccion
                                  
                                  salir_etapa:
-                                 ;	ldi DATO, 'J'
-                                 ;	clr AUX2
-                                 ;	out PORTC, AUX2
-                                 ;	out PORTB, AUX2
-                                 ;	rcall timer1_conf_A
+0000e2 e42a                      	ldi DATO, 'J'		; codigo tentativo para cuando se solucione el rebote
+0000e3 2744                      	clr AUX2
+0000e4 b948                      	out PORTC, AUX2
+0000e5 b945                      	out PORTB, AUX2
                                  
-                                 ;	clr AUX1
-                                 ;	sts ADCSRA, AUX1	; desactivo adc
-                                 ;	out EIMSK, AUX2		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
+0000e6 2700                      	clr AUX1
+0000e7 9300 007a                 	sts ADCSRA, AUX1	; desactivo adc
+0000e9 bb0d                      	out EIMSK, AUX1	
+                                 
+0000ea df78                      	rcall timer1_conf_A
+                                 
+                                 	; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
                                  	
-                                 ;	rcall guardar_dato
-                                 ;	rcall mover_a_derecha
-                                 ;	cpi RESTANTES_A_SELECCIONAR, 0
-                                 ;	brne salir_seleccion
-                                 ;	rcall salir_etapa
                                  
                                  salir_seleccion:
-0000db 9518                      	reti
+0000eb 9518                      	reti
                                  
-                                 int_timer1B:
-0000dc 9518                      	reti
                                  int_timer1:
-                                 ;	sbic PIND, 2
-                                 ;	sbi PINC, 2
-0000dd e04f                      	ldi AUX2, BAJA
-0000de b943                      	out PINB, AUX2
-0000df b146                      	in  AUX2, PINC
-0000e0 604f                      	ori AUX2, BAJA
-0000e1 b946                      	out PINC, AUX2
+0000ec e04f                      	ldi AUX2, BAJA
+0000ed b943                      	out PINB, AUX2
+0000ee b146                      	in  AUX2, PINC
+0000ef 604f                      	ori AUX2, BAJA
+0000f0 b946                      	out PINC, AUX2
                                  
-0000e2 951a                      	dec CONT
-0000e3 f009                      	breq fin_espera
-0000e4 c003                      	rjmp salir_int_timer1
+0000f1 951a                      	dec CONT
+0000f2 f009                      	breq fin_espera
+0000f3 c003                      	rjmp salir_int_timer1
                                  fin_espera:	
                                  ;	lds AUX1, UCSR0A		
                                  ;	sbrs AUX1, UDRE0		; corroboro que el buffer este vacio 
                                  ;	rjmp fin_espera
                                  ;	sts UDR0, DATO		; envio dato por uart
-0000e5 2744                      	clr AUX2
-0000e6 9340 0081                 	sts TCCR1B, AUX2	; desactivo timer 1 para que no produzca nuevas interrupciones y consumir menos energia 
+0000f4 2744                      	clr AUX2
+0000f5 9340 0081                 	sts TCCR1B, AUX2	; desactivo timer 1 para que no produzca nuevas interrupciones y consumir menos energia 
                                  salir_int_timer1:
-0000e8 9518                      	reti
+0000f7 9518                      	reti
                                  
-0000e9 0000
-0000ea 0000
-0000eb 0000
-0000ec 0000
+0000f8 0000
+0000f9 0000
+0000fa 0000
+0000fb 0000
 
 
 RESOURCE USE INFORMATION
@@ -1417,39 +1393,39 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega328P" register use summary:
-x  :   6 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   7 y  :   1 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  46 r17:  12 r18:   6 r19:   9 r20:  22 
-r21:   2 r22:   6 r23:   0 r24:   0 r25:   0 r26:   3 r27:   3 r28:   1 
+r13:   0 r14:   0 r15:   0 r16:  45 r17:  12 r18:   6 r19:   9 r20:  31 
+r21:   4 r22:   6 r23:   0 r24:   0 r25:   0 r26:   3 r27:   3 r28:   1 
 r29:   1 r30:   1 r31:   1 
-Registers used: 15 out of 35 (42.9%)
+Registers used: 16 out of 35 (45.7%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   8 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   4 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   5 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   5 cls   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   7 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  10 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
+cpi   :  11 cpse  :   0 dec   :   4 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 jmp   :   0 
 ld    :   5 ldd   :   0 ldi   :  46 lds   :   1 lpm   :   1 lsl   :   0 
 lsr   :   0 mov   :   2 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  13 pop   :   0 
-push  :   0 rcall :  12 ret   :  13 reti  :   5 rjmp  :  12 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   1 sbic  :   1 sbis  :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  16 pop   :   0 
+push  :   0 rcall :  16 ret   :  14 reti  :   4 rjmp  :  11 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   1 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   1 std   :   0 sts   :  19 
+sez   :   0 sleep :   0 spm   :   0 st    :   3 std   :   0 sts   :  20 
 sub   :   1 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 24 out of 113 (21.2%)
+Instructions used: 23 out of 113 (20.4%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0001dc    374     10    384   32768   1.2%
+[.cseg] 0x000000 0x0001fa    402     10    412   32768   1.3%
 [.dseg] 0x000100 0x000118      0     24     24    2048   1.2%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

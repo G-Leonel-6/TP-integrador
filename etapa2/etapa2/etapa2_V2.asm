@@ -76,7 +76,7 @@ cifras_ram:		.byte	10
 
 	rcall conf_IO
 	rcall conf_int0
-;	rcall conf_ADC
+	rcall conf_ADC
 	rcall timer1_conf_B
 	rcall conf_estado_inicial
 
@@ -142,7 +142,7 @@ timer1_conf_A:
 	sts OCR1AL, AUX2
 
 	ldi AUX2, (1<<OCIE1A)
-	sts TIMSK1, AUX1	
+	sts TIMSK1, AUX2	
 	ldi AUX2, (1<<WGM12)|(1<<CS12)|(1<<CS10)
 	sts TCCR1B, AUX2
 	ldi CONT, CANT
@@ -154,9 +154,9 @@ timer1_conf_B:
 	ldi AUX1, low(7811)	
 	sts OCR1BL, AUX1
 
-	ldi AUX1, high(7811)
+	ldi AUX1, high(7812)
 	sts OCR1AH, AUX1
-	ldi AUX1, low(7811)	
+	ldi AUX1, low(7812)	
 	sts OCR1AL, AUX1
 
 	ldi AUX1, (1<<OCIE1B);
@@ -217,6 +217,11 @@ apuntar_final_posiciones_ram:
 	ld POS, X
 	ret
 
+guardar_dato:
+	st Y+, DATO
+	ldi AUX2, OCUPADO
+	st X, AUX2
+	ret
 
 mover_a_derecha:
 	cpi CONT, N_POSICIONES-1
@@ -271,12 +276,9 @@ derecha:
 	cpi ESTADO, MEDIO
 	brne salir_adc
 	rcall mover_a_derecha
-	ldi ESTADO, 0
+	ldi ESTADO, 0 
 salir_adc:
-	ldi AUX1, N_SELECCIONADOS
-	sub AUX1, RESTANTES_A_SELECCIONAR
-	out PORTC, AUX1
-	out PORTB, DATO
+	out PORTB, DATO 
 	reti 
 
 boton:
@@ -291,23 +293,30 @@ seleccion:
 interrupcion:
 	clr AUX2
 	sts TCCR2B, AUX2
-	sbi PINC, 2		; para debug togglear un led
-salir_etapa:
-;	ldi DATO, 'J'		; codigo tentativo para cuando se solucione el rebote
-;	clr AUX2
-;	out PORTC, AUX2
-;	out PORTB, AUX2
-;	rcall timer1_conf_A
 
-;	clr AUX1
-;	sts ADCSRA, AUX1	; desactivo adc
-;	out EIMSK, AUX2		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
+	rcall guardar_dato
+	rcall mover_a_derecha
+	dec RESTANTES_A_SELECCIONAR
+	ldi AUX2, N_SELECCIONADOS
+	sub AUX2, RESTANTES_A_SELECCIONAR
+	out PORTC, AUX2
+	cpi RESTANTES_A_SELECCIONAR, 0
+	brne salir_seleccion
+
+salir_etapa:
+	ldi DATO, 'J'		; codigo tentativo para cuando se solucione el rebote
+	clr AUX2
+	out PORTC, AUX2
+	out PORTB, AUX2
+
+	clr AUX1
+	sts ADCSRA, AUX1	; desactivo adc
+	out EIMSK, AUX1	
+
+	rcall timer1_conf_A
+
+	; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
 	
-;	rcall guardar_dato
-;	rcall mover_a_derecha
-;	cpi RESTANTES_A_SELECCIONAR, 0
-;	brne salir_seleccion
-;	rcall salir_etapa
 
 salir_seleccion:
 	reti
