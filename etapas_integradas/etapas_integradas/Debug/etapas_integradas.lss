@@ -1,12 +1,12 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm Mon Jun 24 16:25:05 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapa3.asm Mon Jun 24 19:23:52 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapa3.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapa3.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
-                                 /*
+                                 .include "m328pdef.inc"
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328P.xml **********
                                  ;*************************************************************************
@@ -987,15 +987,6 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): In
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                  * etapa2_V2.asm
-                                  *
-                                  *  Created: 6/21/2024 10:15:29 PM
-                                  *   Author: leone
-                                  */ 
-                                 
-                                 
-                                  
-                                   .include "m328pdef.inc"
                                  
                                  ;***** Created: 2011-02-09 12:03 ******* Source: ATmega328P.xml **********
                                  ;*************************************************************************
@@ -1040,60 +1031,46 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): In
                                  
                                  ; ***** END OF FILE ******************************************************
                                  
-                                  
-                                 ; Constantes del programa
-                                 .equ	CANT = 6 ; Numero constante
-                                 .equ	IZQUIERDA_V = 0
-                                 .equ	DERECHA_V = 0xff
-                                 .equ	N_POSICIONES = 10
-                                 .equ	N_SELECCIONADOS = 4
-                                 .equ	VACIO = 0
-                                 .equ	OCUPADO = 1
-                                 .equ	AlTA = 0xf0
-                                 .equ	BAJA = 0x0f
-                                 .equ	ESPERANDO = 0
-                                 .equ	DEBOUNCING = 1
-                                 .equ	MEDIO = 1
                                  
+                                 .macro chequear_si_ascii
+                                 	cpi @0, '0'		; 48 es el ascii para '0'
+                                 	BRLO error
+                                 					;chequeo si es mayor/same, sino brancheo a error
+                                 	cpi @0, '9'+1	;58 es el siguiente en ascii al '9'
+                                 	BRSH error
+                                 .endmacro
                                  
-                                 ; Alias de los registros
-                                 .def	AUX1 = r16
-                                 .def	CONT = r17
-                                 .def	DATO = r18
-                                 .def	POS = r19
-                                 .def	AUX2 = r20
-                                 .def	RESTANTES_A_SELECCIONAR = r21
-                                 .def	ESTADO = r22
+                                 .macro chequear_si_igual
+                                 	cp @0, @1
+                                 	BREQ error
+                                 	cp @0, @2
+                                 	BREQ error
+                                 	cp @0, @3
+                                 	BREQ error
+                                 	cp @1, @2
+                                 	BREQ error
+                                 	cp @1, @3
+                                 	BREQ error
+                                 	cp @3, @2
+                                 	BREQ error
+                                 .endmacro
                                  
                                  
                                  .dseg
                                  ; Segmento de datos en memoria de datos
                                  .org SRAM_START
-                                 ; Definicion de variable 
-                                 ; Nombre .byte Tamanio_en_bytes
-000100                           posiciones_ram:	.byte	10
-00010a                           seleccionados:  .byte	4
-00010e                           cifras_ram:		.byte	10
+                                 ; Definición de variables en la RAM
+000100                           original_nums: .byte 5     ; Reserva 50 bytes para original_nums
+000105                           users_guess:   .byte 5      ; Reserva 4 bytes para users_guess
                                  
                                  .cseg
                                  .org 0x0000
-000000 c033                      	rjmp main
+                                 ; Segmento de datos en memoria de codigo
+000000 c033                      	rjmp	main 
                                  
-                                 .org INT0addr
-000002 c0de                      	rjmp boton
-                                 
-                                 .org OVF2addr
-000012 c0d0                      	rjmp seleccion
-                                 
-                                 .org OC1Aaddr
-000016 c0e3                      	rjmp int_timer1
-                                 
-                                 
-                                 .org ADCCaddr
-00002a c0a3                      	rjmp adc_complete
                                  
                                  .org INT_VECTORS_SIZE
-                                  main:
+                                 main:
                                  
                                  	; Se inicializa el Stack Pointer al final de la RAM utilizando la definicion global
                                  	; RAMEND
@@ -1102,294 +1079,142 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa2\etapa2\etapa2_V2.asm(10): In
 000036 ef0f                      	ldi		r16,LOW(RAMEND)
 000037 bf0d                      	out		spl,r16
                                  
-000038 d064                      	rcall apuntar_inicio_posiciones
-000039 d068                      	rcall cargar_posiciones_a_ram
-                                 
-00003a d021                      	rcall conf_IO
-00003b d01a                      	rcall conf_int0
-00003c d005                      	rcall USART_conf
-00003d d055                      	rcall conf_ADC
-00003e d040                      	rcall timer1_conf_B
-00003f d00f                      	rcall conf_estado_inicial
-                                 
-000040 9478                      	sei
-                                 main_loop:
-000041 cfff                      	rjmp main_loop
-                                 
-                                 USART_conf:
-                                 	 ; Set baud rate to UBRR0
-000042 e000                      	 ldi AUX1, 0
-000043 9300 00c5                 	 sts UBRR0H, AUX1
-000045 e607                      	 ldi AUX1, 103		; baudrate de 9600
-000046 9300 00c4                 	 sts UBRR0L, AUX1
-                                 	 ; Enable receiver and transmitter
-000048 ed08                      	 ldi r16, (1<<RXCIE0)|(1<<TXCIE0)|(1<<RXEN0)|(1<<TXEN0)
-000049 9300 00c1                 	 sts UCSR0B,r16
-                                 	 ; Set frame format: 8data, 1 stop bit
-00004b e006                      	 ldi r16, (3<<UCSZ00)
-00004c 9300 00c2                 	 sts UCSR0C,r16
-00004e 9508                      	 ret
-                                 
-                                 conf_estado_inicial:
-                                 
-00004f d059                      	rcall apuntar_inicio_posiciones_ram
-                                 
-000050 e0d1                      	ldi YH, high(seleccionados)
-000051 e0ca                      	ldi YL, low(seleccionados)
-                                 
-000052 e054                      	ldi RESTANTES_A_SELECCIONAR, N_SELECCIONADOS
-000053 e020                      	ldi DATO, 0
-000054 e061                      	ldi ESTADO, MEDIO
-000055 9508                      	ret
+000038 d05e                      	rcall	inicializar_registros
+000039 c000                      	rjmp	leer_numero_serial ; El número se guarda en el registro R20
+                                 	;rcall	comparar_numero		;chequea los bits que tiene de iguales
                                  
                                  
-                                 conf_int0:
-000056 e002                      	ldi AUX1, (2<<ISC00)
-000057 9300 0069                 	sts EICRA, AUX1
                                  
-000059 e001                      	ldi AUX1, (1<<INT0)
-00005a bb0d                      	out EIMSK, AUX1
+                                 leer_numero_serial: ; esto debería incluir también la verificación de si los caracteres son válidos.
+                                 ;Si algun caracter no es ascii del 0 al 9 se devuelve a leer serial. 
+                                 	;RECIBIR NUMERO AAA
                                  
-00005b 9508                      	ret
+                                    ; Cargar valores ASCII en users_guess
+00003a e301                          ldi r16, 0x31            ; Cargar valor ASCII '1'
+00003b 9300 0105                     sts users_guess, r16     ; Almacenar en users_guess[0]
+00003d e302                          ldi r16, 0x32            ; Cargar valor ASCII '2'
+00003e 9300 0106                     sts users_guess+1, r16   ; Almacenar en users_guess[1]
+000040 e303                          ldi r16, 0x33            ; Cargar valor ASCII '3'
+000041 9300 0107                     sts users_guess+2, r16   ; Almacenar en users_guess[2]
+000043 e304                          ldi r16, 0x34            ; Cargar valor ASCII '4'
+000044 9300 0108                     sts users_guess+3, r16   ; Almacenar en users_guess[3]
                                  
-                                 conf_IO:
-00005c 2700                      	clr AUX1
-00005d b90a                      	out DDRD, AUX1
-00005e e004                      	ldi AUX1, (1<<PD2)
-00005f b90b                      	out PORTD, AUX1
-000060 e00f                      	ldi AUX1, BAJA
-000061 b904                      	out DDRB, AUX1
-000062 b907                      	out DDRC, AUX1
+                                     ; Cargar valores ASCII en original_nums
+000046 e301                          ldi r16, 0x31            ; Cargar valor ASCII '1'
+000047 9300 0100                     sts original_nums, r16   ; Almacenar en original_nums[0]
+000049 e315                          ldi r17, 0x35            ; Cargar valor ASCII '2'
+00004a 9310 0101                     sts original_nums+1, r17 ; Almacenar en original_nums[1]
+00004c e326                          ldi r18, 0x36            ; Cargar valor ASCII '3'
+00004d 9320 0102                     sts original_nums+2, r18 ; Almacenar en original_nums[2]
+00004f e332                          ldi r19, 0x32            ; Cargar valor ASCII '4'
+000050 9330 0103                     sts original_nums+3, r19 ; Almacenar en original_nums[3]
+                                 
+                                 
+000052 c000                      	rjmp chequeos
+                                 
+                                 chequeos:	;Chequeo si es ascii, y si se repiten los nuemeros
+000053 e0d1                      	ldi YH, high(users_guess)
+000054 e0c5                      	ldi YL, low(users_guess)
+000055 9169                      	ld R22, Y+
+000056 9179                      	ld R23, Y+
+000057 9189                      	ld R24, Y+
+000058 8198                      	ld R25, Y
+000059 3360
+00005a f1d0
+00005b 336a
+00005c f5c0                      	chequear_si_ascii R22
+00005d 3370
+00005e f1b0
+00005f 337a
+000060 f5a0                      	chequear_si_ascii R23
+000061 3380
+000062 f190
+000063 338a
+000064 f580                      	chequear_si_ascii R24
+000065 3390
+000066 f170
+000067 339a
+000068 f560                      	chequear_si_ascii R25
+                                 
+000069 1767
+00006a f151
+00006b 1768
+00006c f141
+00006d 1769
+00006e f131
+00006f 1778
+000070 f121
+000071 1779
+000072 f111
+000073 1798
+000074 f101                      	chequear_si_igual R22, R23, R24, R25
+                                 
+                                 ;el R18, 19, 20, 21 son el número original, R22, 23, 24, y 25 son el número recibido.
+000075 c000                      	rjmp comparar_numero
+                                 comparar_numero:
+                                 ;pongo en 0 el registro para enviar a luz verde y a luz roja
+                                 
+                                 
+000076 e000                      	ldi R16, 0 
+                                 	;mov r23, r16;auxiliar para pos de Y
+000077 2f60                      	mov r22, r16; auxiliar para pos de X
+000078 e040                      	ldi R20, 0 ;el que voy a poner en la luz verde
+000079 e050                      	ldi R21, 0 ;el que voy a poenr en la luz roja
+                                 
+                                  
+00007a e0b1                      	ldi XH, high(original_nums)
+00007b e0a0                      	ldi XL, low(original_nums)
+                                 loop1:
+00007c 912d                      	ld R18, X+ ; es el original
+                                 	;vuelvo a setear Y en la posición inicial de la tabla
+                                 
+00007d e0d1                      	ldi YH, high(users_guess)
+00007e e0c5                      	ldi YL, low(users_guess)
+00007f e081                      	ldi R24, 0b00000001 ; se setea acá para que vuelva a la pos. 0 cada vez que vuelvo a iterar en Y
+000080 e070                      	ldi R23, 0
+                                 loop2:
+000081 9139                      	ld R19, Y+ ;es la tabla donde tengo 
+000082 1723                      	cp R18, R19
+000083 f429                      	brne sigo_1 ; Si no son iguales, sigo adelante con la comparación
+000084 1767                      	cp R22, R23 ; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se prende led rojo
+000085 f411                      	brne rojo_0
+000086 2b48                      	or R20, R24
+000087 c001                      	rjmp sigo_1; si el registro que cuenta para X es igual al contador de Y, se prende el led verde, sino rojo
+                                 rojo_0:
+000088 2b58                      	or R21, R24
+                                 sigo_1:
+000089 0f88                      	LSL R24 ; en la primera iteración estaba en la pos. 0, en la segunda va a ser 0b00000010 y así. Para ponerlo en los leds rojo/verde
+00008a 9573                      	INC R23
+00008b 3074                      	cpi R23, 4 ; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
+00008c f009                      	breq fin_loop_1	; esta parte chequea que no haya terminado de iterar sobre X.
+00008d cff3                      	rjmp loop2 ; si no terminó, sigo iterando
+                                 fin_loop_1:
+00008e 9563                      	INC R22
+00008f 3064                      	cpi R22, 4 ; si está en 4 y acá al final es porque terminé
+000090 f009                      	breq seteo_luces
+000091 cfea                      	rjmp loop1
+                                 
+                                 seteo_luces:
+000092 b945                      	out PORTB, R20 ; verde
+000093 b958                      	out PORTC, R21 ; rojo
+                                 
+000094 c001                      rjmp fin
                                  	
-000063 2700                      	clr AUX1
-                                 	
-000064 b905                      	out PORTB, AUX1
-000065 b908                      	out PORTC, AUX1
-000066 9508                      	ret
-                                 
-                                 timer_2_conf_delay:
-000067 e041                      	ldi AUX2, (1<<WGM00)
-000068 9340 00b0                 	sts TCCR2A, AUX2
-                                 
-00006a e041                      	ldi AUX2,(1<<TOIE0)
-00006b 9340 0070                 	sts TIMSK2, AUX2
+000095 cfff                      error: rjmp error ;editar para hacer algo/enviarte a algún lugar
+000096 cfff                      fin: rjmp fin
                                  
                                  
-00006d e045                      	ldi AUX2, (5<<CS00)
-00006e 9340 00b1                 	sts TCCR2B, AUX2
                                  
-000070 9508                      	ret
-                                 
-                                 timer1_conf_A:
-000071 e14e                      	ldi AUX2, high(7812)
-000072 9340 0089                 	sts OCR1AH, AUX2
-000074 e844                      	ldi AUX2, low(7812)	
-000075 9340 0088                 	sts OCR1AL, AUX2
-                                 
-000077 e042                      	ldi AUX2, (1<<OCIE1A)
-000078 9340 006f                 	sts TIMSK1, AUX2	
-00007a e04d                      	ldi AUX2, (1<<WGM12)|(1<<CS12)|(1<<CS10)
-00007b 9340 0081                 	sts TCCR1B, AUX2
-00007d e016                      	ldi CONT, CANT
-00007e 9508                      	ret
-                                 
-                                 timer1_conf_B:
-00007f e10e                      	ldi AUX1, high(7811)
-000080 9300 008b                 	sts OCR1BH, AUX1
-000082 e803                      	ldi AUX1, low(7811)	
-000083 9300 008a                 	sts OCR1BL, AUX1
-                                 
-000085 e10e                      	ldi AUX1, high(7812)
-000086 9300 0089                 	sts OCR1AH, AUX1
-000088 e804                      	ldi AUX1, low(7812)	
-000089 9300 0088                 	sts OCR1AL, AUX1
-                                 
-00008b e004                      	ldi AUX1, (1<<OCIE1B);
-00008c 9300 006f                 	sts TIMSK1, AUX1
-                                 
-00008e e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)
-00008f 9300 0081                 	sts TCCR1B, AUX1
-                                 
-000091 2700                      	clr AUX1
-                                 
-000092 9508                      	ret
-                                 
-                                 conf_ADC:
-000093 e604                      	ldi AUX1, (1<<REFS0)|(1<<ADLAR)|(1<<MUX2)
-000094 9300 007c                 	sts ADMUX, AUX1
-                                 
-000096 e005                      	ldi AUX1, (1<<ADTS2)|(1<<ADTS0)
-000097 9300 007b                 	sts ADCSRB, AUX1
-                                 
-000099 ee0b                      	ldi AUX1, (1<<ADEN)|(1<<ADSC)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS1)|(1<<ADPS0)
-00009a 9300 007a                 	sts ADCSRA, AUX1
-                                 
-00009c 9508                      	ret
-                                 
-                                 apuntar_inicio_posiciones:
-00009d e0f2                      	ldi ZH, high(posiciones<<1)
-00009e e1e8                      	ldi ZL, low(posiciones<<1)
-                                 
-00009f e0b1                      	ldi XH, high(posiciones_ram)
-0000a0 e0a0                      	ldi XL, low(posiciones_ram)
-                                 
-0000a1 9508                      	ret
-                                 
-                                 cargar_posiciones_a_ram:
-0000a2 e01a                      	ldi CONT, N_POSICIONES
-                                 loop:
-0000a3 9105                      	lpm AUX1, Z+
-0000a4 930d                      	st X+, AUX1
-0000a5 951a                      	dec CONT
-0000a6 f009                      	breq salir_cargar
-0000a7 cffb                      	rjmp loop
-                                 salir_cargar:	
-0000a8 9508                      	ret
-                                 
-                                 apuntar_inicio_posiciones_ram:
-0000a9 e0b1                      	ldi XH, high(posiciones_ram)
-0000aa e0a0                      	ldi XL, low(posiciones_ram)
-                                 
-0000ab e010                      	ldi CONT, 0
-0000ac 913c                      	ld POS, X
-0000ad 9508                      	ret
-                                 
-                                 apuntar_final_posiciones_ram:
-0000ae e0b1                      	ldi XH, high(posiciones_ram+N_POSICIONES-1)
-0000af e0a9                      	ldi XL, low(posiciones_ram+N_POSICIONES-1)
-                                 	
-0000b0 e019                      	ldi CONT, N_POSICIONES-1
-0000b1 913c                      	ld POS, X
-0000b2 9508                      	ret
-                                 
-                                 guardar_dato:
-0000b3 9329                      	st Y+, DATO
-0000b4 e041                      	ldi AUX2, OCUPADO
-0000b5 934c                      	st X, AUX2
-0000b6 9508                      	ret
-                                 
-                                 mover_a_derecha:
-0000b7 3019                      	cpi CONT, N_POSICIONES-1
-0000b8 f419                      	brne seguir_derecha
-0000b9 dfef                      	rcall apuntar_inicio_posiciones_ram
-0000ba 3030                      	cpi POS, VACIO
-0000bb f029                      	breq salir_mover_derecha
-                                 
-                                 seguir_derecha:
-0000bc 913d                      	ld POS, X+		; realizo incremento del puntero
-0000bd 913c                      	ld POS, X		; dato que realmente me interesa
-0000be 9513                      	inc CONT
-0000bf 3031                      	cpi POS, OCUPADO
-0000c0 f3b1                      	breq mover_a_derecha
-                                 	
-                                 salir_mover_derecha:
-0000c1 2f21                      	mov DATO, CONT
-0000c2 9508                      	ret
-                                 
-                                 mover_a_izquierda:
-0000c3 3010                      	cpi CONT, 0
-0000c4 f419                      	brne seguir_izquierda
-0000c5 dfe8                      	rcall apuntar_final_posiciones_ram
-0000c6 3030                      	cpi POS, VACIO
-0000c7 f021                      	breq salir_mover_a_izquierda
-                                 
-                                 seguir_izquierda: 
-0000c8 913e                      	ld POS, -X
-0000c9 951a                      	dec CONT
-0000ca 3031                      	cpi POS, OCUPADO
-0000cb f3b9                      	breq mover_a_izquierda
-                                 
-                                 salir_mover_a_izquierda:
-0000cc 2f21                      	mov DATO, CONT
-0000cd 9508                      	ret
-                                 
-                                 adc_complete:
-0000ce 9100 0079                 	lds AUX1, ADCH
-0000d0 3000                      	cpi AUX1, IZQUIERDA_V
-0000d1 f021                      	breq izquierda
-0000d2 3f0f                      	cpi AUX1, DERECHA_V
-0000d3 f039                      	breq derecha
-0000d4 e061                      	ldi ESTADO, MEDIO
-0000d5 c009                      	rjmp salir_adc
-                                 izquierda:
-0000d6 3061                      	cpi ESTADO, MEDIO		; el estado anterior del jostick debe ser el medio por motivos de robustez 
-0000d7 f439                      	brne salir_adc
-0000d8 dfea                      	rcall mover_a_izquierda
-0000d9 e060                      	ldi ESTADO, 0
-0000da c004                      	rjmp salir_adc
-                                 derecha:
-0000db 3061                      	cpi ESTADO, MEDIO
-0000dc f411                      	brne salir_adc
-0000dd dfd9                      	rcall mover_a_derecha
-0000de e060                      	ldi ESTADO, 0 
-                                 salir_adc:
-0000df b925                      	out PORTB, DATO 
-0000e0 9518                      	reti 
-                                 
-                                 boton:
-0000e1 df85                      	rcall timer_2_conf_delay
-                                 salir_boton:
-0000e2 9518                      	reti
-                                 
-                                 seleccion:
-0000e3 994a                      	sbic PIND, 2
-0000e4 c014                      	rjmp salir_seleccion
-                                 
-                                 interrupcion:
-0000e5 2744                      	clr AUX2
-0000e6 9340 00b1                 	sts TCCR2B, AUX2
-                                 
-0000e8 dfca                      	rcall guardar_dato
-0000e9 dfcd                      	rcall mover_a_derecha
-0000ea 955a                      	dec RESTANTES_A_SELECCIONAR
-0000eb e044                      	ldi AUX2, N_SELECCIONADOS
-0000ec 1b45                      	sub AUX2, RESTANTES_A_SELECCIONAR
-0000ed b948                      	out PORTC, AUX2
-0000ee 3050                      	cpi RESTANTES_A_SELECCIONAR, 0
-0000ef f449                      	brne salir_seleccion
-                                 
-                                 salir_etapa:
-0000f0 e42a                      	ldi DATO, 'J'		; codigo tentativo para cuando se solucione el rebote
-0000f1 2744                      	clr AUX2
-0000f2 b948                      	out PORTC, AUX2
-0000f3 b945                      	out PORTB, AUX2
-                                 
-0000f4 2700                      	clr AUX1
-0000f5 9300 007a                 	sts ADCSRA, AUX1	; desactivo adc
-0000f7 bb0d                      	out EIMSK, AUX1	
-                                 
-0000f8 df78                      	rcall timer1_conf_A
-                                 
-                                 	; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
-                                 	
-                                 
-                                 salir_seleccion:
-0000f9 9518                      	reti
-                                 
-                                 int_timer1:
-0000fa e04f                      	ldi AUX2, BAJA
-0000fb b943                      	out PINB, AUX2
-0000fc b146                      	in  AUX2, PINC
-0000fd 604f                      	ori AUX2, BAJA
-0000fe b946                      	out PINC, AUX2
-                                 
-0000ff 951a                      	dec CONT
-000100 f009                      	breq fin_espera
-000101 c009                      	rjmp salir_int_timer1
-                                 fin_espera:	
-000102 9100 00c0                 	lds AUX1, UCSR0A		
-000104 ff05                      	sbrs AUX1, UDRE0		; corroboro que el buffer este vacio 
-000105 cffc                      	rjmp fin_espera
-000106 9320 00c6                 	sts UDR0, DATO		; envio dato por uart
-000108 2744                      	clr AUX2
-000109 9340 0081                 	sts TCCR1B, AUX2	; desactivo timer 1 para que no produzca nuevas interrupciones y consumir menos energia 
-                                 salir_int_timer1:
-00010b 9518                      	reti
-                                 
-00010c 0000
-00010d 0000
-00010e 0000
-00010f 0000
+                                 inicializar_registros:   
+000097 e04f                      	ldi		r20,0x0F	
+000098 b944                      	out		ddrb,r20
+000099 e04f                      	ldi		r20,0x0F	
+00009a b947                      	out		ddrc,r20
+00009b b948                      	out		portc,r20 ; seteo port C y port B como entradas, excepto del 0 al 3 que son las luces - 0b00001111
+                                    
+00009c 2744                      	clr		r20
+                                 	;sts		entrada,r20
+                                 	;sts		salida,r20
 
 
 RESOURCE USE INFORMATION
@@ -1407,40 +1232,40 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega328P" register use summary:
-x  :   7 y  :   1 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   1 y  :   5 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  55 r17:  12 r18:   7 r19:   9 r20:  31 
-r21:   4 r22:   6 r23:   0 r24:   0 r25:   0 r26:   3 r27:   3 r28:   1 
-r29:   1 r30:   1 r31:   1 
+r13:   0 r14:   0 r15:   0 r16:  16 r17:   2 r18:   4 r19:   4 r20:   9 
+r21:   3 r22:  10 r23:  10 r24:  10 r25:   6 r26:   1 r27:   1 r28:   2 
+r29:   2 r30:   0 r31:   0 
 Registers used: 16 out of 35 (45.7%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   8 brge  :   0 brhc  :   0 
-brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   5 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brhs  :   0 brid  :   0 brie  :   0 brlo  :   4 brlt  :   0 brmi  :   0 
+brne  :   2 brpl  :   0 brsh  :   4 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   7 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  11 cpse  :   0 dec   :   4 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 jmp   :   0 
-ld    :   5 ldd   :   0 ldi   :  50 lds   :   2 lpm   :   1 lsl   :   0 
-lsr   :   0 mov   :   2 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   1 out   :  16 pop   :   0 
-push  :   0 rcall :  17 ret   :  15 reti  :   4 rjmp  :  12 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   1 sbis  :   0 
-sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
-sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   3 std   :   0 sts   :  25 
-sub   :   1 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 24 out of 113 (21.2%)
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   8 cpc   :   0 
+cpi   :  10 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   2 jmp   :   0 
+ld    :   6 ldd   :   0 ldi   :  23 lds   :   0 lpm   :   0 lsl   :   1 
+lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   0 or    :   2 ori   :   0 out   :   7 pop   :   0 
+push  :   0 rcall :   1 ret   :   1 reti  :   0 rjmp  :  10 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
+sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
+sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   8 
+sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
+Instructions used: 18 out of 113 (15.9%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000222    442     10    452   32768   1.4%
-[.dseg] 0x000100 0x000118      0     24     24    2048   1.2%
+[.cseg] 0x000000 0x00013c    214      0    214   32768   0.7%
+[.dseg] 0x000100 0x00010a      0     10     10    2048   0.5%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
 Assembly complete, 0 errors, 0 warnings

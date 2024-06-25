@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm Sat Jun 22 11:03:04 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\etapa3_V2.asm Tue Jun 25 12:06:21 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -695,18 +695,22 @@ EQU  ACIaddr      0000002e
 EQU  TWIaddr      00000030
 EQU  SPMRaddr     00000032
 EQU  INT_VECTORS_SIZE 00000034
+DEF  out_leds_rojos r20
+DEF  out_leds_verdes r21
+DEF  pos_x        r22
+DEF  pos_y        r23
 DSEG original_nums 00000100
 DSEG users_guess  00000105
 CSEG main         00000034
 CSEG inicializar_registros 0000003a
 CSEG leer_numero_serial 00000041
 CSEG chequeos     0000005a
-CSEG error        0000009c
+CSEG error        0000009a
 CSEG comparar_numero 0000007d
 CSEG loop1        00000083
-CSEG loop2        00000088
-CSEG sigo_1       00000090
-CSEG rojo_0       0000008f
-CSEG fin_loop_1   00000095
-CSEG seteo_luces  00000099
-CSEG fin          0000009d
+CSEG loop2        00000087
+CSEG sigo_1       0000008f
+CSEG rojo_0       0000008e
+CSEG fin_loop_1   00000093
+CSEG seteo_luces  00000097
+CSEG fin          0000009b

@@ -23,7 +23,9 @@
 .equ	ESPERANDO = 0
 .equ	DEBOUNCING = 1
 .equ	MEDIO = 1
-
+.equ	BUSCANDO_CONTRINCANTE = 0
+.equ	ELIGIENDO_NUMERO = 1
+.equ	JUEGO = 2
 
 ; Alias de los registros
 .def	AUX1 = r16
@@ -52,7 +54,7 @@ cifras_ram:		.byte	10
 	rjmp boton
 
 .org OVF2addr
-	rjmp seleccion
+	rjmp timer2int
 
 .org OC1Aaddr
 	rjmp int_timer1
@@ -300,7 +302,7 @@ boton:
 salir_boton:
 	reti
 
-seleccion:
+timer2int:
 	sbic PIND, 2
 	rjmp salir_seleccion
 
@@ -325,12 +327,9 @@ salir_etapa:
 
 	clr AUX1
 	sts ADCSRA, AUX1	; desactivo adc
-	out EIMSK, AUX1	
+	out EIMSK, AUX1		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
 
 	rcall timer1_conf_A
-
-	; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
-	
 
 salir_seleccion:
 	reti

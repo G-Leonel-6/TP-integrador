@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm Sat Jun 22 11:03:04 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\etapa3_V2.asm Tue Jun 25 12:06:21 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\etapa3_V2.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\main.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\etapa3_V2.asm(1): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
                                  .include "m328pdef.inc"
                                  
@@ -1055,6 +1055,12 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\ma
                                  	BREQ error
                                  .endmacro
                                  
+                                 ; Alias de los registros
+                                 .def	out_leds_rojos	= r20
+                                 .def	out_leds_verdes	= r21
+                                 .def	pos_x			=r22
+                                 .def	pos_y			=r23
+                                 
                                  
                                  .dseg
                                  ; Segmento de datos en memoria de datos
@@ -1130,34 +1136,34 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\ma
 00005e 9189                      	ld R24, Y+
 00005f 8198                      	ld R25, Y
 000060 3360
-000061 f1d0
+000061 f1c0
 000062 336a
-000063 f5c0                      	chequear_si_ascii R22
+000063 f5b0                      	chequear_si_ascii R22
 000064 3370
-000065 f1b0
+000065 f1a0
 000066 337a
-000067 f5a0                      	chequear_si_ascii R23
+000067 f590                      	chequear_si_ascii R23
 000068 3380
-000069 f190
+000069 f180
 00006a 338a
-00006b f580                      	chequear_si_ascii R24
+00006b f570                      	chequear_si_ascii R24
 00006c 3390
-00006d f170
+00006d f160
 00006e 339a
-00006f f560                      	chequear_si_ascii R25
+00006f f550                      	chequear_si_ascii R25
                                  
 000070 1767
-000071 f151
+000071 f141
 000072 1768
-000073 f141
+000073 f131
 000074 1769
-000075 f131
+000075 f121
 000076 1778
-000077 f121
+000077 f111
 000078 1779
-000079 f111
+000079 f101
 00007a 1798
-00007b f101                      	chequear_si_igual R22, R23, R24, R25
+00007b f0f1                      	chequear_si_igual R22, R23, R24, R25
                                  
                                  ;el R18, 19, 20, 21 son el número original, R22, 23, 24, y 25 son el número recibido.
 00007c c000                      rjmp comparar_numero
@@ -1166,10 +1172,9 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\ma
                                  
                                  
 00007d e000                      ldi R16, 0 
-                                 ;mov r23, r16;auxiliar para pos de Y
-00007e 2f60                      mov r22, r16; auxiliar para pos de X
-00007f e040                      ldi R20, 0 ;el que voy a poner en la luz verde
-000080 e050                      ldi R21, 0 ;el que voy a poenr en la luz roja
+00007e 2f60                      mov pos_x, r16; auxiliar para pos de X
+00007f e050                      ldi out_leds_verdes, 0 ;el que voy a poner en la luz verde
+000080 e040                      ldi out_leds_rojos, 0 ;el que voy a poenr en la luz roja
                                  
                                   
 000081 e0b1                      	ldi 	   XH, high(original_nums)
@@ -1180,43 +1185,41 @@ C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\ma
                                  
 000084 e0d1                      	ldi 	   YH, high(users_guess)
 000085 e0c5                      	ldi 	   YL, low(users_guess)
-000086 e081                      	ldi R24, 0b00000001 ; se setea acá para que vuelva a la pos. 0 cada vez que vuelvo a iterar en Y
-000087 e070                      	ldi R23, 0
+000086 e070                      	ldi pos_y, 0
                                  	loop2:
-000088 9139                      		ld R19, Y+ ;es la tabla donde tengo 
-000089 1723                      		cp R18, R19
-00008a f429                      		brne sigo_1 ; Si no son iguales, sigo adelante con la comparación
-00008b 1767                      		cp R22, R23 ; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se prende led rojo
-00008c f411                      		brne rojo_0
-00008d 2b48                      		or R20, R24
-00008e c001                      		rjmp sigo_1; si el registro que cuenta para X es igual al contador de Y, se prende el led verde, sino rojo
+000087 9139                      		ld R19, Y+ ;es la tabla donde tengo 
+000088 1723                      		cp R18, R19
+000089 f429                      		brne sigo_1 ; Si no son iguales, sigo adelante con la comparación
+00008a 1767                      		cp pos_x, pos_y ; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se aumentan leds rojos
+00008b f411                      		brne rojo_0
+00008c 9553                      		INC out_leds_verdes
+00008d c001                      		rjmp sigo_1; si el registro que cuenta para X es igual al contador de Y, aumenta la cantidad de leds verdes, sino rojos
                                  		rojo_0:
-00008f 2b58                      			or R21, R24
+00008e 9543                      			INC out_leds_rojos
                                  		sigo_1:
-000090 0f88                      		LSL R24 ; en la primera iteración estaba en la pos. 0, en la segunda va a ser 0b00000010 y así. Para ponerlo en los leds rojo/verde
-000091 9573                      		INC R23
-000092 3074                      		cpi R23, 4 ; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
-000093 f009                      		breq fin_loop_1	; esta parte chequea que no haya terminado de iterar sobre X.
-000094 cff3                      		rjmp loop2 ; si no terminó, sigo iterando
+00008f 9573                      		INC pos_y
+000090 3074                      		cpi pos_y, 4 ; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
+000091 f009                      		breq fin_loop_1	; esta parte chequea que no haya terminado de iterar sobre X.
+000092 cff4                      		rjmp loop2 ; si no terminó, sigo iterando
                                  	fin_loop_1:
-000095 9563                      	INC R22
-000096 3064                      	cpi R22, 4 ; si está en 4 y acá al final es porque terminé
-000097 f009                      	breq seteo_luces
-000098 cfea                      	rjmp loop1
+000093 9563                      	INC pos_x
+000094 3064                      	cpi pos_x, 4 ; si está en 4 y acá al final es porque terminé
+000095 f009                      	breq seteo_luces
+000096 cfec                      	rjmp loop1
                                  
                                  seteo_luces:
-000099 b945                      	out PORTB, R20 ; verde
-00009a b958                      	out PORTC, R21 ; rojo
+000097 b955                      	out PORTB, out_leds_verdes ; verde
+000098 b948                      	out PORTC, out_leds_rojos ; rojo
                                  
-00009b c001                      rjmp fin
+000099 c001                      rjmp fin
                                  	
                                  
                                  	
                                  
                                  
                                  
-00009c cfff                      error: rjmp error ;editar para hacer algo/enviarte a algún lugar
-00009d cfff                      fin: rjmp fin
+00009a cfff                      error: rjmp error ;editar para hacer algo/enviarte a algún lugar
+00009b cfff                      fin: rjmp fin
 
 
 RESOURCE USE INFORMATION
@@ -1237,7 +1240,7 @@ counted separately from r26..r31 here.
 x  :   1 y  :   5 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
 r13:   0 r14:   0 r15:   0 r16:  16 r17:   2 r18:   4 r19:   4 r20:   9 
-r21:   3 r22:  10 r23:  10 r24:  10 r25:   6 r26:   1 r27:   1 r28:   2 
+r21:   3 r22:  10 r23:  10 r24:   6 r25:   6 r26:   1 r27:   1 r28:   2 
 r29:   2 r30:   0 r31:   0 
 Registers used: 16 out of 35 (45.7%)
 
@@ -1251,22 +1254,22 @@ brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   8 cpc   :   0 
 cpi   :  10 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   2 jmp   :   0 
-ld    :   6 ldd   :   0 ldi   :  23 lds   :   0 lpm   :   0 lsl   :   1 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   4 jmp   :   0 
+ld    :   6 ldd   :   0 ldi   :  22 lds   :   0 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   1 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   2 ori   :   0 out   :   7 pop   :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   7 pop   :   0 
 push  :   0 rcall :   1 ret   :   1 reti  :   0 rjmp  :  10 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   8 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 18 out of 113 (15.9%)
+Instructions used: 16 out of 113 (14.2%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00013c    214      0    214   32768   0.7%
+[.cseg] 0x000000 0x000138    210      0    210   32768   0.6%
 [.dseg] 0x000100 0x00010a      0     10     10    2048   0.5%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

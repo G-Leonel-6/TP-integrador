@@ -11,11 +11,13 @@
 .equ	ESPERANDO = 1; Numero constante
 .equ	RECIBIDO = 2
 .equ	CANT = 6
+.equ	BAJA = 0x0f
 ; Alias de los registros
 .def	DATO = r18
 .def	AUX1 = r16
 .def	CONT = r17
 .def	ESTADO = r19
+.def	AUX2 = r20
 
 .macro USART_Transmit
 transmit:
@@ -38,9 +40,13 @@ var1:	.byte	1
 .org 0x0000
 ; Segmento de datos en memoria de codigo
 	rjmp	main
-
+;.org INT0addr
+;	rjmp boton
 .org OC1Aaddr
 	rjmp int_timer1
+
+.org OVF2addr
+	rjmp timer2int
 
 .org URXCaddr
 	rjmp r_complete
@@ -60,24 +66,48 @@ main:
 	ldi		r16,LOW(RAMEND)
 	out		spl,r16
 				
-	rcall timer1_conf
-
+;	rcall conf_int0
+	rcall conf_IO
 	rcall USART_init
 	sei
 
-	ldi r16, 'N'
-	sts UDR0, r16
 
 ; Arranca mi loop principal que se ejecutará eternamente	
 main_loop:
     rjmp main_loop
 
+timer_2_conf_delay:
+	ldi AUX2, (1<<WGM00)
+	sts TCCR2A, AUX2
+
+	ldi AUX2,(1<<TOIE0)
+	sts TIMSK2, AUX2
+
+	ldi AUX2, (5<<CS00)
+	sts TCCR2B, AUX2
+
+	ret
+
+conf_int0:
+	ldi AUX1, (2<<ISC00)
+	sts EICRA, AUX1
+
+	ldi AUX1, (1<<INT0)
+	out EIMSK, AUX1
+
+	ret
 
 conf_IO:
-	ldi AUX1, 0x0f
+	clr AUX1
+	out DDRD, AUX1
+	ldi AUX1, (1<<PD2)
+	out PORTD, AUX1
+	ldi AUX1, BAJA
 	out DDRB, AUX1
 	out DDRC, AUX1
+	
 	clr AUX1
+	
 	out PORTB, AUX1
 	out PORTC, AUX1
 	ret
@@ -97,34 +127,35 @@ USART_Init:
 	 ret
 
 timer1_conf:
-	ldi r16, (1<<WGM12)|(1<<CS12)|(1<<CS10)
-	sts TCCR1B, r16
-	ldi AUX1, (1<<OCIE1A)
-	sts TIMSK1, AUX1
-	ldi r16, high(7812)
-	sts OCR1AH, r16
-	ldi r16, low(7812)	
-	sts OCR1AL, r16
+	ldi AUX2, high(7812)
+	sts OCR1AH, AUX2
+	ldi AUX2, low(7812)	
+	sts OCR1AL, AUX2
+
+	ldi AUX2, (1<<OCIE1A)
+	sts TIMSK1, AUX2	
+	ldi AUX2, (1<<WGM12)|(1<<CS12)|(1<<CS10)
+	sts TCCR1B, AUX2
 	ldi CONT, CANT
 	ret
 
 int_timer1:
-	ldi AUX1, 0x0f
-	out PINB, AUX1
-	in  AUX1, PINC
-	ori AUX1, 0x0f
-	out PINC, AUX1
+	ldi AUX2, BAJA
+	out PINB, AUX2
+	in  AUX2, PINC
+	ori AUX2, BAJA
+	out PINC, AUX2
 
 	dec CONT
 	breq fin_espera
 	rjmp salir_int_timer1
-fin_espera:
-	lds r17, UCSR0A
-	sbrs r17, UDRE0
+fin_espera:	
+	lds AUX1, UCSR0A		
+	sbrs AUX1, UDRE0		; corroboro que el buffer este vacio 
 	rjmp fin_espera
-	sts UDR0, DATO
-	clr AUX1
-	sts TCCR1B, AUX1
+	sts UDR0, DATO		; envio dato por uart
+	clr AUX2
+	sts TCCR1B, AUX2	; desactivo timer 1 para que no produzca nuevas interrupciones y consumir menos energia 
 salir_int_timer1:
 	reti
 
@@ -140,6 +171,19 @@ salir_r:
 
 t_complete:
 	ldi ESTADO, ESPERANDO
+	reti
+
+boton:
+	rcall timer_2_conf_delay
+salir_boton:
+	reti
+
+timer2int:
+	sbic PIND, 2
+	rjmp salir_timer2_int
+
+	rcall timer1_conf
+salir_timer2_int:
 	reti
 
 ; Definicion de tabla en memoria de codigo
