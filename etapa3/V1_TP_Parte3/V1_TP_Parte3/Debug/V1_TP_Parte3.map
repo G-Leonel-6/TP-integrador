@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\etapa3_V2.asm Tue Jun 25 12:06:21 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapa3\V1_TP_Parte3\V1_TP_Parte3\etapa3_V3.asm Tue Jun 25 12:36:34 2024
 
 
 EQU  SIGNATURE_000 0000001e
@@ -699,18 +699,20 @@ DEF  out_leds_rojos r20
 DEF  out_leds_verdes r21
 DEF  pos_x        r22
 DEF  pos_y        r23
+DEF  msk_verde    r24
+DEF  msk_rojo     r25
 DSEG original_nums 00000100
 DSEG users_guess  00000105
 CSEG main         00000034
 CSEG inicializar_registros 0000003a
 CSEG leer_numero_serial 00000041
 CSEG chequeos     0000005a
-CSEG error        0000009a
+CSEG error        0000009e
 CSEG comparar_numero 0000007d
-CSEG loop1        00000083
-CSEG loop2        00000087
-CSEG sigo_1       0000008f
-CSEG rojo_0       0000008e
-CSEG fin_loop_1   00000093
-CSEG seteo_luces  00000097
-CSEG fin          0000009b
+CSEG loop1        00000085
+CSEG loop2        00000089
+CSEG sigo_1       00000093
+CSEG rojo_0       00000091
+CSEG fin_loop_1   00000097
+CSEG seteo_luces  0000009b
+CSEG fin          0000009f

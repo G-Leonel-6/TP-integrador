@@ -8,13 +8,7 @@
 
 .include "m328pdef.inc"
  
- .macro chequear_si_ascii
-	cpi @0, '0'		; 48 es el ascii para '0'
-	BRLO error
-					;chequeo si es mayor/same, sino brancheo a error
-	cpi @0, '9'+1	;58 es el siguiente en ascii al '9'
-	BRSH error
-.endmacro
+
 
 .macro chequear_si_igual
 	cp @0, @1
@@ -33,7 +27,7 @@
 
 ; Constantes del programa
 .equ	CANT = 6
-.equ	IZQUIERDA_V = 0
+.equ	IZQUIERDA_V = 0x06
 .equ	DERECHA_V = 0xff
 .equ	N_POSICIONES = 10
 .equ	N_SELECCIONADOS = 4
@@ -45,7 +39,7 @@
 .equ	BUSCANDO_CONTRINCANTE = 0
 .equ	ELIGIENDO_NUMERO = 1
 .equ	JUEGO = 2
-.equ	NO_RECIBIR_MAS_DATOS = 3
+.equ	JUEGO_TERMINADO = 3
 
 ; Alias de los registros
 .def	AUX1 = r16
@@ -54,12 +48,21 @@
 .def	POS = r19
 .def	AUX2 = r20
 .def	RESTANTES_A_SELECCIONAR = r21
-.def	ESTADO = r22
-.def	NUMERO_USUARIO_1 =
-.def	NUMERO_USUARIO_2 =
-.def	NUMERO_USUARIO_3 =
-.def	NUMERO_USUARIO_4 = 
-
+.def	ESTADO = r1
+.def	NUMERO_USUARIO_1 = r22
+.def	NUMERO_USUARIO_2 = r23
+.def	NUMERO_USUARIO_3 = r24
+.def	NUMERO_USUARIO_4 = r25
+.def	DATO_X = r18
+.def	DATO_Y = r19
+.def	LEDS_ROJOS	= r20
+.def	LEDS_VERDES	= r21
+.def	POS_X			=r22
+.def	POS_Y			=r23
+.def	MSK_VERDE		=r24
+.def	MSK_ROJO		=r25
+.def	CONT2 = r2
+.def	NUMEROS_RECIBIDOS = r3
 
 .dseg
 ; Segmento de datos en memoria de datos
@@ -68,8 +71,7 @@
 ; Nombre .byte Tamanio_en_bytes
 posiciones_ram:	.byte	10
 seleccionados:  .byte	4
-cifras_ram:		.byte	10
-usuario			.byte	4
+usuario:			.byte	4
 
 .cseg
 .org 0x0000
@@ -107,7 +109,8 @@ main:
 	rcall conf_int0
 	rcall USART_conf
 	rcall conf_IO
-	ldi ESTADO, BUSCANDO_CONTRINCANTE
+	ldi AUX1, BUSCANDO_CONTRINCANTE
+	mov ESTADO, AUX1
 	sei
 
 ; Arranca mi loop principal que se ejecutará eternamente	
@@ -124,7 +127,8 @@ conf_estado_inicial_eligiendo_numero:
 
 	ldi RESTANTES_A_SELECCIONAR, N_SELECCIONADOS
 	ldi DATO, 0
-	ldi ESTADO, MEDIO
+	ldi AUX1, ELIGIENDO_NUMERO
+	mov ESTADO, AUX1
 	ret
 
 conf_IO:
@@ -300,58 +304,63 @@ salir_mover_a_izquierda:
 	ret
 
 comparar_numero:
-;pongo en 0 el registro para enviar a luz verde y a luz roja
+	ldi POS_X, 0				; auxiliar para pos de X
+	ldi LEDS_VERDES, 0			;el que voy a poner en la luz verde
+	ldi LEDS_ROJOS, 0			;el que voy a poenr en la luz roja
+	ldi MSK_VERDE, 0b00000001 
+	ldi MSK_ROJO, 0b00000001 
 
-
-	ldi R16, 0 
-	;mov r23, r16;auxiliar para pos de Y
-	mov r22, r16; auxiliar para pos de X
-	ldi R20, 0 ;el que voy a poner en la luz verde
-	ldi R21, 0 ;el que voy a poenr en la luz roja
-
- 
 	ldi XH, high(seleccionados)
 	ldi XL, low(seleccionados)
 loop1:
-	ld R18, X+			; es el original
-						;vuelvo a setear Y en la posición inicial de la tabla
-
-	ldi YH, high(users_guess)
-	ldi YL, low(users_guess)
-	ldi R24, 0b00000001 ; se setea acá para que vuelva a la pos. 0 cada vez que vuelvo a iterar en Y
-	ldi R23, 0
+	ld DATO_X, X+						; es el original
+									
+	ldi YH, high(usuario)				;vuelvo a setear Y en la posición inicial de la tabla
+	ldi YL, low(usuario)
+	ldi POS_Y, 0
 loop2:
-	ld R19, Y+			;es la tabla donde tengo 
-	cp R18, R19
-	brne sigo_1			; Si no son iguales, sigo adelante con la comparación
-	cp R22, R23			; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se prende led rojo
+	ld DATO_Y, Y+						;es la tabla donde tengo 
+	cp DATO_X, DATO_Y
+	brne sigo_1						; Si no son iguales, sigo adelante con la comparación
+	cp POS_X, POS_Y					; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se aumentan leds rojos
 	brne rojo_0
-	or R20, R24
-	rjmp sigo_1			; si el registro que cuenta para X es igual al contador de Y, se prende el led verde, sino rojo
+	or LEDS_VERDES, MSK_VERDE
+	lsl MSK_VERDE
+	rjmp sigo_1						; si el registro que cuenta para X es igual al contador de Y, aumenta la cantidad de leds verdes, sino rojos
 rojo_0:
-	or R21, R24
+	or LEDS_ROJOS, MSK_ROJO
+	lsl MSK_ROJO
 sigo_1:
-	LSL R24				; en la primera iteración estaba en la pos. 0, en la segunda va a ser 0b00000010 y así. Para ponerlo en los leds rojo/verde
-	INC R23
-	cpi R23, 4			; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
-	breq fin_loop_1		; esta parte chequea que no haya terminado de iterar sobre X.
-	rjmp loop2			; si no terminó, sigo iterando
+	INC POS_Y
+	cpi POS_Y, 4					; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
+	breq fin_loop_1					; esta parte chequea que no haya terminado de iterar sobre X.
+	rjmp loop2						; si no terminó, sigo iterando
 fin_loop_1:
-	INC R22
-	cpi R22, 4			; si está en 4 y acá al final es porque terminé
+	INC POS_X
+	cpi POS_X, 4					 ; si está en 4 y acá al final es porque terminé
 	breq seteo_luces
 	rjmp loop1
 
 seteo_luces:
-	out PORTB, R20 ; verde
-	out PORTC, R21 ; rojo
+	cpi LEDS_VERDES, BAJA
+	breq numero_adivinado
+	inc CONT2
+	rjmp mostrar_leds
+
+numero_adivinado:
+	mov LEDS_ROJOS, CONT2
+	ldi AUX1, JUEGO_TERMINADO
+	mov ESTADO, AUX1
+mostrar_leds:
+	out PORTB, LEDS_VERDES		 ; verde
+	out PORTC, LEDS_ROJOS		 ; rojo
 
 	ret
 
 adc_complete:
 	lds AUX1, ADCH
 	cpi AUX1, IZQUIERDA_V
-	breq izquierda
+	brlo izquierda
 	cpi AUX1, DERECHA_V
 	breq derecha
 	rjmp salir_adc
@@ -361,7 +370,7 @@ izquierda:
 derecha:
 	rcall mover_a_derecha
 salir_adc:
-	out PORTB, DATO 
+	out PORTB, CONT
 	reti 
 
 boton:
@@ -387,11 +396,10 @@ fin_espera:
 	clr AUX1
 	sts TCCR1B, AUX1
 
-	cpi ESTADO, BUSCANDO_CONTRINCANTE
+	ldi AUX1, BUSCANDO_CONTRINCANTE
+	cp ESTADO, AUX1 
 	breq salir_etapa_buscando_contrincante
-	cpi ESTADO, ELIGIENDO_NUMERO
-	breq salir_etapa_eligiendo_numero
-	rjmp salir_int_timer1
+	rjmp salir_int_timer1`
 
 salir_etapa_buscando_contrincante:
 	rcall apuntar_inicio_posiciones
@@ -399,13 +407,8 @@ salir_etapa_buscando_contrincante:
 	rcall conf_estado_inicial_eligiendo_numero
 	rcall conf_ADC
 	rcall timer1_conf_B
-	rjmp salir_int_timer1
-
-salir_etapa_eligiendo_numero
-	ldi CONT, N_SELECCIONADOS]
-
-	ldi YH, high(usuario)
-	ldi YL, low(usuario)
+;	clr AUX1
+;	sts UCSR0B, AUX1
 
 salir_int_timer1:
 	reti
@@ -415,7 +418,8 @@ timer2int:
 	rjmp salir_timer2_int
 	clr AUX2
 	sts TCCR2B, AUX2
-	cpi ESTADO, BUSCANDO_CONTRINCANTE
+	ldi AUX2, BUSCANDO_CONTRINCANTE 
+	cp ESTADO, AUX2
 	breq timer2_buscando_contrincante
 	rjmp timer2_seleccion
 
@@ -436,6 +440,7 @@ timer2_seleccion:
 	brne salir_timer2_int
 
 salir_etapa_eligiendo_numero:
+	rcall USART_conf
 	ldi DATO, 'J'		
 	clr AUX2
 	out PORTC, AUX2
@@ -445,20 +450,29 @@ salir_etapa_eligiendo_numero:
 	sts ADCSRA, AUX1	; desactivo adc
 	out EIMSK, AUX1		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
 
-	ldi ESTADO, JUEGO
+	ldi AUX1, JUEGO
+	mov ESTADO, AUX1
+	ldi AUX1, 1
+	mov CONT2, AUX1
 	rcall timer1_conf_A
 
 salir_timer2_int:
 	reti
 
 r_complete:
-	cpi ESTADO, BUSCANDO_CONTRINCANTE
+	ldi AUX2, BUSCANDO_CONTRINCANTE
+	cp ESTADO, AUX2
 	breq recibir_N
-	cpi ESTADO, JUEGO
+	ldi AUX2, JUEGO
+	cp ESTADO, AUX2
 	breq recibir_numero
+	ldi AUX2, JUEGO_TERMINADO
+	cp ESTADO, AUX2
+	breq esperar_reset
 	rjmp salir_r
 
 recibir_N:
+	sbi PINC, 3
 	lds DATO, UDR0
 	cpi DATO, 'N'
 	brne salir_r
@@ -467,42 +481,78 @@ conf_timer:
 	rjmp salir_r
 recibir_numero:
 	lds DATO, UDR0
-	chequear_si_ascii DATO
+	cpi DATO, '0'		; 48 es el ascii para '0'
+	brlo error
+					;chequeo si es mayor/same, sino brancheo a error
+	cpi DATO, '9'+1	;58 es el siguiente en ascii al '9'
+	brsh error
+
+	subi DATO, '0'
 	st Y+, DATO
-	dec CONT
+	inc NUMEROS_RECIBIDOS
+	ldi AUX1, N_SELECCIONADOS
+	cp NUMEROS_RECIBIDOS, AUX1
 	breq comparar
 	rjmp salir_r
 
 comparar:
 	ldi YH, high(usuario)
 	ldi YL, low(usuario)
-	ld R22, Y+
-	ld R23, Y+
-	ld R24, Y+
-	ld R25, Y
+	ld NUMERO_USUARIO_1, Y+
+	ld NUMERO_USUARIO_2, Y+
+	ld NUMERO_USUARIO_3, Y+
+	ld NUMERO_USUARIO_4, Y
 
-	chequear_si_igual R22, R23, R24, R25
-	ldi ESTADO, NO_RECIBIR_MAS_DATOS
+	chequear_si_igual NUMERO_USUARIO_1, NUMERO_USUARIO_2, NUMERO_USUARIO_3, NUMERO_USUARIO_4
 	rcall comparar_numero
-	rjmp salir_r
-error:
-	ldi CONT, N_SELECCIONADOS	 
+
+	clr AUX1
+	mov NUMEROS_RECIBIDOS, AUX1
 	ldi YH, high(usuario)
 	ldi YL, low(usuario)
+	rjmp salir_r
+error:
+	sbi PINC,4
+	clr AUX1
+	mov NUMEROS_RECIBIDOS, AUX1
+	ldi YH, high(usuario)
+	ldi YL, low(usuario)
+	rjmp salir_r
+esperar_reset:
+	lds DATO, UDR0
+	cpi DATO, 'R'
+	breq resetear
+	rjmp salir_r
+resetear:
+	ldi AUX1, BUSCANDO_CONTRINCANTE
+	mov ESTADO, AUX1
+	clr AUX1
+	out PORTC, AUX1
+	out PORTB, AUX1
+	rcall conf_int0
 salir_r:
 	reti
 
 t_complete:
-	cpi ESTADO, BUSCANDO_CONTRINCANTE
+	ldi AUX1, BUSCANDO_CONTRINCANTE
+	cp ESTADO, AUX1
 	breq cambiar_eligiendo_numero
 	rjmp cambiar_juego
 
 cambiar_eligiendo_numero:
-	ldi ESTADO, ELIGIENDO_NUMERO
+	ldi AUX1, ELIGIENDO_NUMERO
+	mov ESTADO, AUX1
 	rjmp salir_t
 
 cambiar_juego:
-	ldi ESTADO, JUEGO
+	clr AUX1
+	mov NUMEROS_RECIBIDOS, AUX1
+
+	ldi YH, high(usuario)
+	ldi YL, low(usuario)
+
+	ldi AUX1, JUEGO
+	mov ESTADO, AUX1
 
 salir_t:
 	reti

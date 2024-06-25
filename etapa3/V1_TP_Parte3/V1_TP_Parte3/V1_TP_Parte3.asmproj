@@ -15,7 +15,7 @@
     <Name>V1_TP_Parte3</Name>
     <RootNamespace>V1_TP_Parte3</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\etapa3_V2.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\etapa3_V3.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -81,6 +81,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="etapa3_V2.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="etapa3_V3.asm">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main.asm">
