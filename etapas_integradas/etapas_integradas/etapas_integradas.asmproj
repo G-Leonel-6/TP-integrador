@@ -76,6 +76,9 @@
     <Compile Include="etapa3_V3.asm">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="etapas_integradas %281%29.asm">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="etapas_integradas.asm">
       <SubType>Code</SubType>
     </Compile>

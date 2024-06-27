@@ -1,16 +1,16 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm Tue Jun 25 18:17:46 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm Wed Jun 26 19:06:15 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(56): warning: Register r18 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(57): warning: Register r19 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(58): warning: Register r20 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(59): warning: Register r21 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(60): warning: Register r22 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(61): warning: Register r23 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(62): warning: Register r24 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(63): warning: Register r25 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(39): warning: Register r18 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(40): warning: Register r19 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(41): warning: Register r20 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(42): warning: Register r21 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(43): warning: Register r22 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(44): warning: Register r23 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(45): warning: Register r24 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(46): warning: Register r25 already defined by the .DEF directive
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
@@ -1047,23 +1047,6 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
                                  
                                  ; ***** END OF FILE ******************************************************
                                   
-                                 
-                                 
-                                 .macro chequear_si_igual
-                                 	cp @0, @1
-                                 	BREQ error
-                                 	cp @0, @2
-                                 	BREQ error
-                                 	cp @0, @3
-                                 	BREQ error
-                                 	cp @1, @2
-                                 	BREQ error
-                                 	cp @1, @3
-                                 	BREQ error
-                                 	cp @3, @2
-                                 	BREQ error
-                                 .endmacro
-                                 
                                  ; Constantes del programa
                                  .equ	CANT = 6
                                  .equ	IZQUIERDA_V = 0x06
@@ -1106,34 +1089,32 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
                                  .dseg
                                  ; Segmento de datos en memoria de datos
                                  .org SRAM_START
-                                 ; Definicion de variable 
-                                 ; Nombre .byte Tamanio_en_bytes
+                                 ; Definicion de tablas 
 000100                           posiciones_ram:	.byte	10
 00010a                           seleccionados:  .byte	4
 00010e                           usuario:			.byte	4
                                  
                                  .cseg
                                  .org 0x0000
-                                 ; Segmento de datos en memoria de codigo
 000000 c033                      	rjmp	main
                                  
                                  .org INT0addr
-000002 c0fc                      	rjmp boton
+000002 c0fa                      	rjmp boton
                                  
                                  .org OVF2addr
-000012 c109                      	rjmp timer2int
+000012 c10a                      	rjmp timer2int
                                  
                                  .org OC1Aaddr
-000016 c0ea                      	rjmp int_timer1
+000016 c0e8                      	rjmp int_timer1
                                  
                                  .org ADCCaddr
-00002a c0c8                      	rjmp adc_complete
+00002a c0c6                      	rjmp adc_complete
                                  
                                  .org URXCaddr
-000024 c11a                      	rjmp r_complete
+000024 c11b                      	rjmp r_complete
                                  
                                  .org UTXCaddr
-000028 c15e                      	rjmp t_complete
+000028 c15d                      	rjmp t_complete
                                  
                                  .org INT_VECTORS_SIZE
                                  main:
@@ -1170,62 +1151,62 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
 000045 2e10                      	mov ESTADO, AUX1
 000046 9508                      	ret
                                  
-                                 conf_IO:
+                                 conf_IO:						; rutina que configura puertos de entrada y salida
 000047 2700                      	clr AUX1
-000048 b90a                      	out DDRD, AUX1
-000049 e004                      	ldi AUX1, (1<<PD2)
-00004a b90b                      	out PORTD, AUX1
+000048 b90a                      	out DDRD, AUX1				; puerto D como entrada
+000049 e004                      	ldi AUX1, (1<<PD2)			 
+00004a b90b                      	out PORTD, AUX1				; pull up interno para el pin 2, pin de nterrupcion int0
 00004b e00f                      	ldi AUX1, BAJA
-00004c b904                      	out DDRB, AUX1
-00004d b907                      	out DDRC, AUX1
+00004c b904                      	out DDRB, AUX1				; parte baja puerto b como salida
+00004d b907                      	out DDRC, AUX1				; parte alta puerto c como salida
                                  	
 00004e 2700                      	clr AUX1
                                  	
-00004f b905                      	out PORTB, AUX1
-000050 b908                      	out PORTC, AUX1
+00004f b905                      	out PORTB, AUX1				; sin pull up interno y valor 0 logico en las salidas
+000050 b908                      	out PORTC, AUX1				; sin pull up interno y valor 0 logico en las salidas
 000051 9508                      	ret
                                  
-                                 conf_int0:
-000052 e002                      	ldi AUX1, (2<<ISC00)
+                                 conf_int0:						; rutina que configura la interrupcion 0
+000052 e002                      	ldi AUX1, (2<<ISC00)		; configuro flanco de descendente como señal de disparo
 000053 9300 0069                 	sts EICRA, AUX1
                                  
-000055 e001                      	ldi AUX1, (1<<INT0)
+000055 e001                      	ldi AUX1, (1<<INT0)			; habilito interrupcion deint0
 000056 bb0d                      	out EIMSK, AUX1
                                  
 000057 9508                      	ret
                                  
                                  USART_conf:
-                                 	 ; Set baud rate to UBRR0
+                                 	
 000058 e040                      	 ldi AUX2, 0
-000059 e607                      	 ldi AUX1, 103		; baudrate de 9600
+000059 e607                      	 ldi AUX1, 103				; baudrate de 9600
 00005a 9340 00c5                 	 sts UBRR0H, AUX2
 00005c 9300 00c4                 	 sts UBRR0L, AUX1
-                                 	 ; Enable receiver and transmitter
-00005e ed08                      	 ldi AUX1, (1<<RXCIE0)|(1<<TXCIE0)|(1<<RXEN0)|(1<<TXEN0)
+                                 	 
+00005e ed08                      	 ldi AUX1, (1<<RXCIE0)|(1<<TXCIE0)|(1<<RXEN0)|(1<<TXEN0)		; habilito receptor y transmisor y sus interrupciones
 00005f 9300 00c1                 	 sts UCSR0B,AUX1
-                                 	 ; Set frame format: 8data, 1 stop bit
-000061 e006                      	 ldi AUX1, (3<<UCSZ00)
+                                 	 
+000061 e006                      	 ldi AUX1, (3<<UCSZ00)											; formato: 8 datos, 1 bit de parada
 000062 9300 00c2                 	 sts UCSR0C,AUX1
 000064 9508                      	 ret
                                  
-                                 timer_2_conf_delay:
-000065 e041                      	ldi AUX2, (1<<WGM00)
+                                 timer_2_conf_delay:													; rutina de configuracion de delay
+000065 e041                      	ldi AUX2, (1<<WGM00)											; modo pwm phase correcta
 000066 9340 00b0                 	sts TCCR2A, AUX2
                                  
-000068 e041                      	ldi AUX2,(1<<TOIE0)
+000068 e041                      	ldi AUX2,(1<<TOIE0)												; habilito interrupcion por overflow timer 2
 000069 9340 0070                 	sts TIMSK2, AUX2
                                  
-00006b e045                      	ldi AUX2, (5<<CS00)
+00006b e045                      	ldi AUX2, (5<<CS00)												; preescaler 1024 
 00006c 9340 00b1                 	sts TCCR2B, AUX2
                                  
 00006e 9508                      	ret
                                  
-                                 timer1_conf_A:
-00006f e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)
+                                 timer1_conf_A:														; rutina de configuracion del timer 1 para rutina de match con OCR1A
+00006f e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)						 
 000070 9300 0081                 	sts TCCR1B, AUX1
-000072 e002                      	ldi AUX1, (1<<OCIE1A)
+000072 e002                      	ldi AUX1, (1<<OCIE1A)											; habilito interrupcion de match con OCR1A
 000073 9300 006f                 	sts TIMSK1, AUX1
-000075 e10e                      	ldi AUX1, high(7812)
+000075 e10e                      	ldi AUX1, high(7812)											; configuro valor de OCR1A
 000076 9300 0089                 	sts OCR1AH, AUX1
 000078 e804                      	ldi AUX1, low(7812)	
 000079 9300 0088                 	sts OCR1AL, AUX1
@@ -1253,364 +1234,362 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
                                  
 000090 9508                      	ret
                                  
-                                 conf_ADC:
-000091 e604                      	ldi AUX1, (1<<REFS0)|(1<<ADLAR)|(1<<MUX2)
+                                 conf_ADC:											; rutina que configura el modulo adc
+000091 e604                      	ldi AUX1, (1<<REFS0)|(1<<ADLAR)|(1<<MUX2)		; ajuste a izquierda, selecciono el adc4, utilizo capacitor entre aref y gnd
 000092 9300 007c                 	sts ADMUX, AUX1
                                  
-000094 e005                      	ldi AUX1, (1<<ADTS2)|(1<<ADTS0)
+000094 e005                      	ldi AUX1, (1<<ADTS2)|(1<<ADTS0)					; autotrigger señal de disparo de por match B timer 1
 000095 9300 007b                 	sts ADCSRB, AUX1
                                  
-000097 ee0b                      	ldi AUX1, (1<<ADEN)|(1<<ADSC)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS1)|(1<<ADPS0)
-000098 9300 007a                 	sts ADCSRA, AUX1
-                                 
+000097 ee0b                      	ldi AUX1, (1<<ADEN)|(1<<ADSC)|(1<<ADATE)|(1<<ADIE)|(1<<ADPS1)|(1<<ADPS0) ; habilito adc, inicio primer conversion, habilito autotrigger, habilito flag de interrupcion de adc, factor de preescaler de 8 
+000098 9300 007a                 	sts ADCSRA, AUX1														 ; 
+                                 						
 00009a 9508                      	ret
                                  
-                                 apuntar_inicio_posiciones:
+                                 apuntar_inicio_posiciones:					; rutina que apunta al inicio de la tabla de posiciones en rom
 00009b e0f3                      	ldi ZH, high(posiciones<<1)
-00009c e2ea                      	ldi ZL, low(posiciones<<1)
+00009c e2e8                      	ldi ZL, low(posiciones<<1)
                                  
 00009d e0b1                      	ldi XH, high(posiciones_ram)
 00009e e0a0                      	ldi XL, low(posiciones_ram)
                                  
 00009f 9508                      	ret
                                  
-                                 cargar_posiciones_a_ram:
-0000a0 e01a                      	ldi CONT, N_POSICIONES
-                                 loop:
-0000a1 9105                      	lpm AUX1, Z+
+                                 cargar_posiciones_a_ram:					; rutina que carga las posiciones de memoria a ram
+0000a0 e01a                      	ldi CONT, N_POSICIONES					; cargo contador con cantidad de posiciones a cargar a ram
+                                 loop:										
+0000a1 9105                      	lpm AUX1, Z+							
 0000a2 930d                      	st X+, AUX1
 0000a3 951a                      	dec CONT
-0000a4 f009                      	breq salir_cargar
+0000a4 f009                      	breq salir_cargar						
 0000a5 cffb                      	rjmp loop
-                                 salir_cargar:	
+                                 salir_cargar:								
 0000a6 9508                      	ret
                                  
-                                 apuntar_inicio_posiciones_ram:
+                                 apuntar_inicio_posiciones_ram:				; rutina que apunta al inicio de la tabla de posiciones en ram
 0000a7 e0b1                      	ldi XH, high(posiciones_ram)
 0000a8 e0a0                      	ldi XL, low(posiciones_ram)
                                  
-0000a9 e010                      	ldi CONT, 0
-0000aa 913c                      	ld POS, X
+0000a9 e010                      	ldi CONT, 0								; carga el valor de 0 en el contador
+0000aa 913c                      	ld POS, X								; cargo el valor de pos por si esta ocupado
 0000ab 9508                      	ret
                                  
-                                 apuntar_final_posiciones_ram:
+                                 apuntar_final_posiciones_ram:				; rutina que apunta al final de la tabla de posiciones en ram
 0000ac e0b1                      	ldi XH, high(posiciones_ram+N_POSICIONES-1)
 0000ad e0a9                      	ldi XL, low(posiciones_ram+N_POSICIONES-1)
                                  	
-0000ae e019                      	ldi CONT, N_POSICIONES-1
-0000af 913c                      	ld POS, X
+0000ae e019                      	ldi CONT, N_POSICIONES-1				; coloco el contador en el ultimo valor posible
+0000af 913c                      	ld POS, X								; cargo el valor de pos por si esta ocupado
 0000b0 9508                      	ret
                                  
-                                 guardar_dato:
-0000b1 9329                      	st Y+, DATO
-0000b2 e041                      	ldi AUX2, OCUPADO
+                                 guardar_dato:								; rutina para guardar el numero seleccionado
+0000b1 9319                      	st Y+, CONT								; guardo el valor de cant en selccionados
+0000b2 e041                      	ldi AUX2, OCUPADO						; lo señalo como ocupado para que no pueda volver a ser seleccionado
 0000b3 934c                      	st X, AUX2
 0000b4 9508                      	ret
                                  
                                  mover_a_derecha:
-0000b5 3019                      	cpi CONT, N_POSICIONES-1
-0000b6 f419                      	brne seguir_derecha
-0000b7 dfef                      	rcall apuntar_inicio_posiciones_ram
-0000b8 3030                      	cpi POS, VACIO
+0000b5 3019                      	cpi CONT, N_POSICIONES-1				; chequeo que no estoy en el final de la tabla
+0000b6 f419                      	brne seguir_derecha						
+0000b7 dfef                      	rcall apuntar_inicio_posiciones_ram		; si estoy al final me muevo al principio
+0000b8 3030                      	cpi POS, VACIO							; verifico que el valor sea valido para ser elegido, si lo es salgo de la rutino, sino sigo
 0000b9 f029                      	breq salir_mover_derecha
                                  
                                  seguir_derecha:
-0000ba 913d                      	ld POS, X+		; realizo incremento del puntero
-0000bb 913c                      	ld POS, X		; dato que realmente me interesa
+0000ba 913d                      	ld POS, X+								; realizo incremento del puntero
+0000bb 913c                      	ld POS, X								; dato que realmente me interesa
 0000bc 9513                      	inc CONT
 0000bd 3031                      	cpi POS, OCUPADO
 0000be f3b1                      	breq mover_a_derecha
                                  	
                                  salir_mover_derecha:
-0000bf 2f21                      	mov DATO, CONT
-0000c0 9508                      	ret
+0000bf 9508                      	ret
                                  
                                  mover_a_izquierda:
-0000c1 3010                      	cpi CONT, 0
-0000c2 f419                      	brne seguir_izquierda
-0000c3 dfe8                      	rcall apuntar_final_posiciones_ram
-0000c4 3030                      	cpi POS, VACIO
-0000c5 f021                      	breq salir_mover_a_izquierda
+0000c0 3010                      	cpi CONT, 0								; chequeo que no se encuentre al principio de la tabla
+0000c1 f419                      	brne seguir_izquierda					
+0000c2 dfe9                      	rcall apuntar_final_posiciones_ram		; si esta al principio me muevo al final
+0000c3 3030                      	cpi POS, VACIO							; el valor es valido para ser elegido, termino la rutino, sino sigo moviendo
+0000c4 f021                      	breq salir_mover_a_izquierda
                                  
                                  seguir_izquierda: 
-0000c6 913e                      	ld POS, -X
-0000c7 951a                      	dec CONT
-0000c8 3031                      	cpi POS, OCUPADO
-0000c9 f3b9                      	breq mover_a_izquierda
+0000c5 913e                      	ld POS, -X
+0000c6 951a                      	dec CONT
+0000c7 3031                      	cpi POS, OCUPADO						; si la el numero ya fue elegido su posicion en la tabla estara ocupada, entonces se salta al siguiente numero
+0000c8 f3b9                      	breq mover_a_izquierda
                                  
                                  salir_mover_a_izquierda:
-0000ca 2f21                      	mov DATO, CONT
-0000cb 9508                      	ret
+0000c9 9508                      	ret
                                  
                                  comparar_numero:
-0000cc e060                      	ldi POS_X, 0				; auxiliar para pos de X
-0000cd e050                      	ldi LEDS_VERDES, 0			;el que voy a poner en la luz verde
-0000ce e040                      	ldi LEDS_ROJOS, 0			;el que voy a poenr en la luz roja
-0000cf e081                      	ldi MSK_VERDE, 0b00000001 
-0000d0 e091                      	ldi MSK_ROJO, 0b00000001 
+0000ca e060                      	ldi POS_X, 0							; auxiliar para pos de X
+0000cb e050                      	ldi LEDS_VERDES, 0						; el que voy a poner en la luz verde
+0000cc e040                      	ldi LEDS_ROJOS, 0						; el que voy a poenr en la luz roja
+0000cd e081                      	ldi MSK_VERDE, 0b00000001 
+0000ce e091                      	ldi MSK_ROJO, 0b00000001 
                                  
-0000d1 e0b1                      	ldi XH, high(seleccionados)
-0000d2 e0aa                      	ldi XL, low(seleccionados)
+0000cf e0b1                      	ldi XH, high(seleccionados)
+0000d0 e0aa                      	ldi XL, low(seleccionados)
                                  loop1:
-0000d3 912d                      	ld DATO_X, X+						; es el original
+0000d1 912d                      	ld DATO_X, X+						; es el original
                                  									
-0000d4 e0d1                      	ldi YH, high(usuario)				;vuelvo a setear Y en la posición inicial de la tabla
-0000d5 e0ce                      	ldi YL, low(usuario)
-0000d6 e070                      	ldi POS_Y, 0
+0000d2 e0d1                      	ldi YH, high(usuario)				; vuelvo a setear Y en la posición inicial de la tabla
+0000d3 e0ce                      	ldi YL, low(usuario)
+0000d4 e070                      	ldi POS_Y, 0
                                  loop2:
-0000d7 9139                      	ld DATO_Y, Y+						;es la tabla donde tengo 
-0000d8 1723                      	cp DATO_X, DATO_Y
-0000d9 f439                      	brne sigo_1						; Si no son iguales, sigo adelante con la comparación
-0000da 1767                      	cp POS_X, POS_Y					; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se aumentan leds rojos
-0000db f419                      	brne rojo_0
-0000dc 2b58                      	or LEDS_VERDES, MSK_VERDE
-0000dd 0f88                      	lsl MSK_VERDE
-0000de c002                      	rjmp sigo_1						; si el registro que cuenta para X es igual al contador de Y, aumenta la cantidad de leds verdes, sino rojos
+0000d5 9139                      	ld DATO_Y, Y+						; es la tabla donde tengo 
+0000d6 1723                      	cp DATO_X, DATO_Y
+0000d7 f439                      	brne sigo_1							; Si no son iguales, sigo adelante con la comparación
+0000d8 1767                      	cp POS_X, POS_Y						; registros auxiliares de en qué posición de X e Y voy. si son iguales significa que nro y pos son correctas. Si son distintos, pos es incorrecta y se aumentan leds rojos
+0000d9 f419                      	brne rojo_0
+0000da 2b58                      	or LEDS_VERDES, MSK_VERDE
+0000db 0f88                      	lsl MSK_VERDE
+0000dc c002                      	rjmp sigo_1							; si el registro que cuenta para X es igual al contador de Y, aumenta la cantidad de leds verdes, sino rojos
                                  rojo_0:
-0000df 2b49                      	or LEDS_ROJOS, MSK_ROJO
-0000e0 0f99                      	lsl MSK_ROJO
+0000dd 2b49                      	or LEDS_ROJOS, MSK_ROJO
+0000de 0f99                      	lsl MSK_ROJO
                                  sigo_1:
-0000e1 9573                      	INC POS_Y
-0000e2 3074                      	cpi POS_Y, 4					; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
-0000e3 f009                      	breq fin_loop_1					; esta parte chequea que no haya terminado de iterar sobre X.
-0000e4 cff2                      	rjmp loop2						; si no terminó, sigo iterando
+0000df 9573                      	INC POS_Y
+0000e0 3074                      	cpi POS_Y, 4						; si esta cuenta llegó a su fin, terminé de iterar sobre Y y puedo incrementar la posición de X.
+0000e1 f009                      	breq fin_loop_1						; esta parte chequea que no haya terminado de iterar sobre X.
+0000e2 cff2                      	rjmp loop2							; si no terminó, sigo iterando
                                  fin_loop_1:
-0000e5 9563                      	INC POS_X
-0000e6 3064                      	cpi POS_X, 4					 ; si está en 4 y acá al final es porque terminé
-0000e7 f009                      	breq seteo_luces
-0000e8 cfea                      	rjmp loop1
+0000e3 9563                      	INC POS_X
+0000e4 3064                      	cpi POS_X, 4						; si está en 4 y acá al final es porque terminé
+0000e5 f009                      	breq seteo_luces
+0000e6 cfea                      	rjmp loop1
                                  
                                  seteo_luces:
-0000e9 305f                      	cpi LEDS_VERDES, BAJA
-0000ea f011                      	breq numero_adivinado
-0000eb 9423                      	inc CONT2
-0000ec c003                      	rjmp mostrar_leds
+0000e7 305f                      	cpi LEDS_VERDES, BAJA				; se detecta que se posicionaron bien todos los digitos
+0000e8 f011                      	breq numero_adivinado
+0000e9 9423                      	inc CONT2
+0000ea c003                      	rjmp mostrar_leds
                                  
                                  numero_adivinado:
-0000ed 2d42                      	mov LEDS_ROJOS, CONT2
-0000ee e003                      	ldi AUX1, JUEGO_TERMINADO
-0000ef 2e10                      	mov ESTADO, AUX1
+0000eb 2d42                      	mov LEDS_ROJOS, CONT2				; se muestra en los leds rojos la cantidad de intentos empleados
+0000ec e003                      	ldi AUX1, JUEGO_TERMINADO
+0000ed 2e10                      	mov ESTADO, AUX1
                                  mostrar_leds:
-0000f0 b955                      	out PORTB, LEDS_VERDES		 ; verde
-0000f1 b948                      	out PORTC, LEDS_ROJOS		 ; rojo
+0000ee b955                      	out PORTB, LEDS_VERDES				; cantidad de digitos que pertenecen al numero secreto bien posicionados
+0000ef b948                      	out PORTC, LEDS_ROJOS				; cantidad de digitos que pertenecen al numero secreto mal posicionados o cantidad de intentos usados para adivinar
                                  
-0000f2 9508                      	ret
+0000f0 9508                      	ret
                                  
-                                 adc_complete:
-0000f3 9100 0079                 	lds AUX1, ADCH
-0000f5 3006                      	cpi AUX1, IZQUIERDA_V
-0000f6 f018                      	brlo izquierda
-0000f7 3f0f                      	cpi AUX1, DERECHA_V
-0000f8 f019                      	breq derecha
-0000f9 c003                      	rjmp salir_adc
+                                 adc_complete:							; interrupcion de conversion analogica digital completa
+0000f1 9100 0079                 	lds AUX1, ADCH
+0000f3 3006                      	cpi AUX1, IZQUIERDA_V
+0000f4 f018                      	brlo izquierda
+0000f5 3f0f                      	cpi AUX1, DERECHA_V
+0000f6 f019                      	breq derecha
+0000f7 c003                      	rjmp salir_adc
                                  izquierda:
-0000fa dfc6                      	rcall mover_a_izquierda
-0000fb c001                      	rjmp salir_adc
+0000f8 dfc7                      	rcall mover_a_izquierda				; rutina que decrementa el contador si se detecta el jostick en la posicion izquierda
+0000f9 c001                      	rjmp salir_adc
                                  derecha:
-0000fc dfb8                      	rcall mover_a_derecha
+0000fa dfba                      	rcall mover_a_derecha				; rutina que incrementa el contador si se detecta el jostick en la posicion derecha
                                  salir_adc:
-0000fd b915                      	out PORTB, CONT
-0000fe 9518                      	reti 
+0000fb b915                      	out PORTB, CONT						; numero disponible para elegir
+0000fc 9518                      	reti 
                                  
                                  boton:
-0000ff df65                      	rcall timer_2_conf_delay
+0000fd df67                      	rcall timer_2_conf_delay			; configuro delay
                                  salir_boton:
-000100 9518                      	reti
+0000fe 9518                      	reti
                                  
                                  int_timer1:
-000101 e00f                      	ldi AUX1, BAJA
-000102 b903                      	out PINB, AUX1
-000103 b106                      	in  AUX1, PINC
-000104 600f                      	ori AUX1, BAJA
-000105 b906                      	out PINC, AUX1
+0000ff e00f                      	ldi AUX1, BAJA						; titilo leds de los ports
+000100 b903                      	out PINB, AUX1
+000101 b106                      	in  AUX1, PINC						; leo portc por seguridad para no interferir con el adc
+000102 600f                      	ori AUX1, BAJA
+000103 b906                      	out PINC, AUX1
                                  
-000106 951a                      	dec CONT
-000107 f009                      	breq fin_espera
-000108 c012                      	rjmp salir_int_timer1
-                                 fin_espera:
-000109 9100 00c0                 	lds AUX1, UCSR0A
-00010b ff05                      	sbrs AUX1, UDRE0
-00010c cffc                      	rjmp fin_espera
-00010d 9320 00c6                 	sts UDR0, DATO
-00010f 2700                      	clr AUX1
-000110 9300 0081                 	sts TCCR1B, AUX1
+000104 951a                      	dec CONT							; decremento contador del timer para llegar a 3s
+000105 f009                      	breq fin_espera				
+000106 c015                      	rjmp salir_int_timer1		
+                                 fin_espera:								; si pasaron 3s 
+000107 9100 00c0                 	lds AUX1, UCSR0A
+000109 ff05                      	sbrs AUX1, UDRE0					; verifico que el buffer este vacio 
+00010a cffc                      	rjmp fin_espera				
+00010b 9320 00c6                 	sts UDR0, DATO						; escribo en el buffer el valor a enviar
+00010d 2700                      	clr AUX1
+00010e 9300 0081                 	sts TCCR1B, AUX1					; limpio registro de control para que el timer no siga corriendo y no dispare nuevas interrupciones
                                  
-000112 e000                      	ldi AUX1, BUSCANDO_CONTRINCANTE
-000113 1610                      	cp ESTADO, AUX1 
-000114 f009                      	breq salir_etapa_buscando_contrincante
-000115 c005                      	rjmp salir_int_timer1`
+000110 e000                      	ldi AUX1, BUSCANDO_CONTRINCANTE
+000111 1610                      	cp ESTADO, AUX1							; verifico estado general del juego
+000112 f009                      	breq salir_etapa_buscando_contrincante	; transicion entre buscando contrincante y eligiendo numero
+000113 c008                      	rjmp salir_int_timer1`
                                  
-                                 salir_etapa_buscando_contrincante:
-000116 df84                      	rcall apuntar_inicio_posiciones
-000117 df88                      	rcall cargar_posiciones_a_ram
-000118 df26                      	rcall conf_estado_inicial_eligiendo_numero
-000119 df77                      	rcall conf_ADC
-00011a df62                      	rcall timer1_conf_B
-                                 ;	clr AUX1
-                                 ;	sts UCSR0B, AUX1
+                                 salir_etapa_buscando_contrincante:			; configuro estado inicial de la nueva etapa y los elementos usados en esta
+000114 df86                      	rcall apuntar_inicio_posiciones			
+000115 df8a                      	rcall cargar_posiciones_a_ram
+000116 df28                      	rcall conf_estado_inicial_eligiendo_numero
+000117 df79                      	rcall conf_ADC
+000118 df64                      	rcall timer1_conf_B
+000119 2700                      	clr AUX1
+00011a 9300 00c1                 	sts UCSR0B, AUX1
                                  
                                  salir_int_timer1:
-00011b 9518                      	reti
+00011c 9518                      	reti
                                  
-                                 timer2int:
-00011c 994a                      	sbic PIND, 2
-00011d c020                      	rjmp salir_timer2_int
-00011e 2744                      	clr AUX2
-00011f 9340 00b1                 	sts TCCR2B, AUX2
-000121 e040                      	ldi AUX2, BUSCANDO_CONTRINCANTE 
-000122 1614                      	cp ESTADO, AUX2
-000123 f009                      	breq timer2_buscando_contrincante
-000124 c003                      	rjmp timer2_seleccion
+                                 timer2int:		
+00011d 994a                      	sbic PIND, 2							; verifico que el boton siga presionado sino salgo de la interrupcion
+00011e c020                      	rjmp salir_timer2_int					
+00011f 2744                      	clr AUX2
+000120 9340 00b1                 	sts TCCR2B, AUX2						; limpio el registro de control para desactivar el timer
+000122 e040                      	ldi AUX2, BUSCANDO_CONTRINCANTE 
+000123 1614                      	cp ESTADO, AUX2							; verifico estado actual del juego
+000124 f009                      	breq timer2_buscando_contrincante		
+000125 c003                      	rjmp timer2_seleccion
                                  
-                                 timer2_buscando_contrincante:
-000125 df49                      	rcall timer1_conf_A
-000126 e42e                      	ldi DATO, 'N'
-000127 c016                      	rjmp salir_timer2_int
+                                 timer2_buscando_contrincante:				; el juego se encuentra en el estado buscando contrincante
+000126 df48                      	rcall timer1_conf_A						
+000127 e42e                      	ldi DATO, 'N'							; preparo el dato que sera enviado por la interfaz serial
+000128 c016                      	rjmp salir_timer2_int
                                  
-                                 timer2_seleccion:
+                                 timer2_seleccion:							; el juego se encuentra en el estado eligiendo numero
+000129 df87                      	rcall guardar_dato						; rutina que guarda el valor del dato en memoria ram
+00012a df8a                      	rcall mover_a_derecha					; se realiza un movimiento a derecha tras selecccionar el numero
+00012b 955a                      	dec RESTANTES_A_SELECCIONAR				; se reduce el valor de los digitos que faltan por ser elegidos
+00012c e044                      	ldi AUX2, N_SELECCIONADOS		
+00012d 1b45                      	sub AUX2, RESTANTES_A_SELECCIONAR	
+00012e b948                      	out PORTC, AUX2							; se muestran por los leds rojos el numero de digito que se elegira ahora
+00012f 3050                      	cpi RESTANTES_A_SELECCIONAR, 0
+000130 f471                      	brne salir_timer2_int
                                  
-000128 df88                      	rcall guardar_dato
-000129 df8b                      	rcall mover_a_derecha
-00012a 955a                      	dec RESTANTES_A_SELECCIONAR
-00012b e044                      	ldi AUX2, N_SELECCIONADOS
-00012c 1b45                      	sub AUX2, RESTANTES_A_SELECCIONAR
-00012d b948                      	out PORTC, AUX2
-00012e 3050                      	cpi RESTANTES_A_SELECCIONAR, 0
-00012f f471                      	brne salir_timer2_int
+                                 salir_etapa_eligiendo_numero:				; si no faltan digitos por elegir
+000131 df26                      	rcall USART_conf				
+000132 e42a                      	ldi DATO, 'J'							; cargo el valor del dato que sera enviado por la interfaz serial
+000133 2744                      	clr AUX2								; apago los leds
+000134 b948                      	out PORTC, AUX2
+000135 b945                      	out PORTB, AUX2
                                  
-                                 salir_etapa_eligiendo_numero:
-000130 df27                      	rcall USART_conf
-000131 e42a                      	ldi DATO, 'J'		
-000132 2744                      	clr AUX2
-000133 b948                      	out PORTC, AUX2
-000134 b945                      	out PORTB, AUX2
+000136 2700                      	clr AUX1
+000137 9300 007a                 	sts ADCSRA, AUX1						; desactivo adc
+000139 bb0d                      	out EIMSK, AUX1							; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
                                  
-000135 2700                      	clr AUX1
-000136 9300 007a                 	sts ADCSRA, AUX1	; desactivo adc
-000138 bb0d                      	out EIMSK, AUX1		; desactivo interrupcion 0 por motivos de robustez de codigo, que el usuario no entre en ella estando en otra etapa
-                                 
-000139 e002                      	ldi AUX1, JUEGO
-00013a 2e10                      	mov ESTADO, AUX1
-00013b e001                      	ldi AUX1, 1
-00013c 2e20                      	mov CONT2, AUX1
-00013d df31                      	rcall timer1_conf_A
+00013a e002                      	ldi AUX1, JUEGO
+00013b 2e10                      	mov ESTADO, AUX1						; cambio al estado juego
+00013c e001                      	ldi AUX1, 1
+00013d 2e20                      	mov CONT2, AUX1
+00013e df30                      	rcall timer1_conf_A						; titilo los leds 
                                  
                                  salir_timer2_int:
-00013e 9518                      	reti
+00013f 9518                      	reti
                                  
-                                 r_complete:
-00013f e040                      	ldi AUX2, BUSCANDO_CONTRINCANTE
-000140 1614                      	cp ESTADO, AUX2
-000141 f039                      	breq recibir_N
-000142 e042                      	ldi AUX2, JUEGO
-000143 1614                      	cp ESTADO, AUX2
-000144 f059                      	breq recibir_numero
-000145 e043                      	ldi AUX2, JUEGO_TERMINADO
-000146 1614                      	cp ESTADO, AUX2
-000147 f199                      	breq esperar_reset
-000148 c03d                      	rjmp salir_r
+                                 r_complete:									; se completo la recepcion de un dato via serial
+000140 e040                      	ldi AUX2, BUSCANDO_CONTRINCANTE			; verifico el estado actual del juego
+000141 1614                      	cp ESTADO, AUX2
+000142 f039                      	breq recibir_N							; si estoy buscando contrincante
+000143 e042                      	ldi AUX2, JUEGO
+000144 1614                      	cp ESTADO, AUX2
+000145 f051                      	breq recibir_numero						; si estoy en el estado de juego
+000146 e043                      	ldi AUX2, JUEGO_TERMINADO
+000147 1614                      	cp ESTADO, AUX2
+000148 f189                      	breq esperar_reset						; si el numero ya fue adivinado y el juego termino
+000149 c03b                      	rjmp salir_r
                                  
-                                 recibir_N:
-000149 9a33                      	sbi PINC, 3
-00014a 9120 00c6                 	lds DATO, UDR0
-00014c 342e                      	cpi DATO, 'N'
-00014d f5c1                      	brne salir_r
+                                 recibir_N:									; estoy buscando contrincante
+00014a 9120 00c6                 	lds DATO, UDR0							; leo el dato del buffer
+00014c 342e                      	cpi DATO, 'N'							; si no es una N salgo termino la interrupcion
+00014d f5b9                      	brne salir_r
                                  conf_timer:
-00014e df20                      	rcall timer1_conf_A
-00014f c036                      	rjmp salir_r
-                                 recibir_numero:
-000150 9120 00c6                 	lds DATO, UDR0
-000152 3320                      	cpi DATO, '0'		; 48 es el ascii para '0'
+00014e df20                      	rcall timer1_conf_A						; recibi N -> titilo leds y configuro proxima etapa
+00014f c035                      	rjmp salir_r
+                                 
+                                 recibir_numero:								; Estoy en el estado de juego
+000150 9120 00c6                 	lds DATO, UDR0							; leo el buffer
+                                 	
+000152 3320                      	cpi DATO, '0'							; verifico que sea un ascci valido 
 000153 f108                      	brlo error
-                                 					;chequeo si es mayor/same, sino brancheo a error
-000154 332a                      	cpi DATO, '9'+1	;58 es el siguiente en ascii al '9'
+                                 											;entre '0' y '9'
+000154 332a                      	cpi DATO, '9'+1							
 000155 f4f8                      	brsh error
                                  
-000156 5320                      	subi DATO, '0'
-000157 9329                      	st Y+, DATO
+000156 5320                      	subi DATO, '0'							; convierto a binario natural
+000157 9329                      	st Y+, DATO								; guardo en la tabla de numeros recibidos
 000158 9433                      	inc NUMEROS_RECIBIDOS
 000159 e004                      	ldi AUX1, N_SELECCIONADOS
-00015a 1630                      	cp NUMEROS_RECIBIDOS, AUX1
-00015b f009                      	breq comparar
-00015c c029                      	rjmp salir_r
+00015a 1630                      	cp NUMEROS_RECIBIDOS, AUX1				; verifico si se alcanzo el maximo
+00015b f009                      	breq comparar							; comparo los numeros si se alcanzo el maximo
+00015c c028                      	rjmp salir_r
                                  
-                                 comparar:
+                                 comparar:				
 00015d e0d1                      	ldi YH, high(usuario)
 00015e e0ce                      	ldi YL, low(usuario)
-00015f 9169                      	ld NUMERO_USUARIO_1, Y+
+00015f 9169                      	ld NUMERO_USUARIO_1, Y+					; levanto los numeros de ram y verifico que no sean iguales
 000160 9179                      	ld NUMERO_USUARIO_2, Y+
 000161 9189                      	ld NUMERO_USUARIO_3, Y+
 000162 8198                      	ld NUMERO_USUARIO_4, Y
                                  
-000163 1767
-000164 f081
-000165 1768
-000166 f071
-000167 1769
-000168 f061
-000169 1778
-00016a f051
-00016b 1779
-00016c f041
-00016d 1798
-00016e f031                      	chequear_si_igual NUMERO_USUARIO_1, NUMERO_USUARIO_2, NUMERO_USUARIO_3, NUMERO_USUARIO_4
-00016f df5c                      	rcall comparar_numero
+000163 1767                      	cp NUMERO_USUARIO_1, NUMERO_USUARIO_2
+000164 f081                      	breq error
+000165 1768                      	cp NUMERO_USUARIO_1, NUMERO_USUARIO_3
+000166 f071                      	breq error
+000167 1769                      	cp NUMERO_USUARIO_1, NUMERO_USUARIO_4
+000168 f061                      	breq error
+000169 1778                      	cp NUMERO_USUARIO_2, NUMERO_USUARIO_3
+00016a f051                      	breq error
+00016b 1779                      	cp NUMERO_USUARIO_2, NUMERO_USUARIO_4
+00016c f041                      	breq error
+00016d 1798                      	cp NUMERO_USUARIO_4, NUMERO_USUARIO_3
+00016e f031                      	breq error
+                                 
+00016f df5a                      	rcall comparar_numero						; si los cuatro numeros son distintos comparo los numeros
                                  
 000170 2700                      	clr AUX1
-000171 2e30                      	mov NUMEROS_RECIBIDOS, AUX1
-000172 e0d1                      	ldi YH, high(usuario)
+000171 2e30                      	mov NUMEROS_RECIBIDOS, AUX1					; tras comparar limpio los numeros recibidos
+000172 e0d1                      	ldi YH, high(usuario)						; vuelvo a apuntar al inicio de la tabla
 000173 e0ce                      	ldi YL, low(usuario)
-000174 c011                      	rjmp salir_r
+000174 c010                      	rjmp salir_r
                                  error:
-000175 9a34                      	sbi PINC,4
-000176 2700                      	clr AUX1
-000177 2e30                      	mov NUMEROS_RECIBIDOS, AUX1
-000178 e0d1                      	ldi YH, high(usuario)
-000179 e0ce                      	ldi YL, low(usuario)
-00017a c00b                      	rjmp salir_r
-                                 esperar_reset:
-00017b 9120 00c6                 	lds DATO, UDR0
-00017d 3522                      	cpi DATO, 'R'
-00017e f009                      	breq resetear
-00017f c006                      	rjmp salir_r
-                                 resetear:
-000180 e000                      	ldi AUX1, BUSCANDO_CONTRINCANTE
-000181 2e10                      	mov ESTADO, AUX1
-000182 2700                      	clr AUX1
-000183 b908                      	out PORTC, AUX1
-000184 b905                      	out PORTB, AUX1
-000185 decc                      	rcall conf_int0
+000175 2700                      	clr AUX1									; en caso de error espero otros 4 numeros y apunto al inicio de la tabla 
+000176 2e30                      	mov NUMEROS_RECIBIDOS, AUX1
+000177 e0d1                      	ldi YH, high(usuario)
+000178 e0ce                      	ldi YL, low(usuario)
+000179 c00b                      	rjmp salir_r
+                                 esperar_reset:									; si estoy en el estado de juego terminado
+00017a 9120 00c6                 	lds DATO, UDR0								; leo del buffer el numero recibido
+00017c 3522                      	cpi DATO, 'R'		
+00017d f009                      	breq resetear								
+00017e c006                      	rjmp salir_r
+                                 resetear:										; recibi una R mientras estaba en el estado de juego terminado
+00017f e000                      	ldi AUX1, BUSCANDO_CONTRINCANTE				; vuelvo al estado inicial 
+000180 2e10                      	mov ESTADO, AUX1
+000181 2700                      	clr AUX1
+000182 b908                      	out PORTC, AUX1								; apago los leds
+000183 b905                      	out PORTB, AUX1					
+000184 decd                      	rcall conf_int0								; vuelvo a habilitar la interrupcion
                                  salir_r:
-000186 9518                      	reti
+000185 9518                      	reti
                                  
-                                 t_complete:
-000187 e000                      	ldi AUX1, BUSCANDO_CONTRINCANTE
-000188 1610                      	cp ESTADO, AUX1
-000189 f009                      	breq cambiar_eligiendo_numero
-00018a c003                      	rjmp cambiar_juego
+                                 t_complete:										; se termino de transmitir el dato del buffer
+000186 e000                      	ldi AUX1, BUSCANDO_CONTRINCANTE
+000187 1610                      	cp ESTADO, AUX1								; verifico estado del juego
+000188 f009                      	breq cambiar_eligiendo_numero
+000189 c003                      	rjmp cambiar_juego
                                  
-                                 cambiar_eligiendo_numero:
-00018b e001                      	ldi AUX1, ELIGIENDO_NUMERO
-00018c 2e10                      	mov ESTADO, AUX1
-00018d c006                      	rjmp salir_t
+                                 cambiar_eligiendo_numero:						; si estaba en buscando contrincante
+00018a e001                      	ldi AUX1, ELIGIENDO_NUMERO					; cambio a estado de eligiendo numero
+00018b 2e10                      	mov ESTADO, AUX1
+00018c c006                      	rjmp salir_t
                                  
-                                 cambiar_juego:
-00018e 2700                      	clr AUX1
-00018f 2e30                      	mov NUMEROS_RECIBIDOS, AUX1
+                                 cambiar_juego:									; si estaba eligiendo numero
+00018d 2700                      	clr AUX1									
+00018e 2e30                      	mov NUMEROS_RECIBIDOS, AUX1					; espero 4 numeros
                                  
-000190 e0d1                      	ldi YH, high(usuario)
-000191 e0ce                      	ldi YL, low(usuario)
+00018f e0d1                      	ldi YH, high(usuario)						; apunto al inicio de la tabla 
+000190 e0ce                      	ldi YL, low(usuario)
                                  
-000192 e002                      	ldi AUX1, JUEGO
-000193 2e10                      	mov ESTADO, AUX1
+000191 e002                      	ldi AUX1, JUEGO								; cambio al estado de juego
+000192 2e10                      	mov ESTADO, AUX1
                                  
                                  salir_t:
-000194 9518                      	reti
+000193 9518                      	reti
                                  
+000194 0000
 000195 0000
 000196 0000
 000197 0000
-000198 0000
 
 
 RESOURCE USE INFORMATION
@@ -1630,7 +1609,7 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   8 y  :   7 z  :   1 r0 :   0 r1 :  13 r2 :   3 r3 :   5 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  99 r17:  13 r18:  18 r19:  11 r20:  30 
+r13:   0 r14:   0 r15:   0 r16: 101 r17:  12 r18:  15 r19:  11 r20:  30 
 r21:   8 r22:   8 r23:   8 r24:   7 r25:   7 r26:   4 r27:   4 r28:   6 
 r29:   6 r30:   1 r31:   1 
 Registers used: 22 out of 35 (62.9%)
@@ -1642,25 +1621,25 @@ brcc  :   0 brcs  :   0 break :   0 breq  :  24 brge  :   0 brhc  :   0
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   2 brlt  :   0 brmi  :   0 
 brne  :   6 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :  11 cls   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :  12 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :  15 cpc   :   0 
 cpi   :  16 cpse  :   0 dec   :   4 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   5 jmp   :   0 
 ld    :  11 ldd   :   0 ldi   :  80 lds   :   5 lpm   :   1 lsl   :   2 
-lsr   :   0 mov   :  14 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+lsr   :   0 mov   :  12 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   2 ori   :   1 out   :  20 pop   :   0 
 push  :   0 rcall :  22 ret   :  16 reti  :   6 rjmp  :  29 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   1 sbis  :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   1 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   4 std   :   0 sts   :  25 
+sez   :   0 sleep :   0 spm   :   0 st    :   4 std   :   0 sts   :  26 
 sub   :   1 subi  :   1 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 31 out of 113 (27.4%)
+Instructions used: 30 out of 113 (26.5%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000334    720     10    730   32768   2.2%
+[.cseg] 0x000000 0x000332    718     10    728   32768   2.2%
 [.dseg] 0x000100 0x000112      0     18     18    2048   0.9%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
