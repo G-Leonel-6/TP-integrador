@@ -1,18 +1,18 @@
 
-AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm Wed Jun 26 19:06:15 2024
+AVRASM ver. 2.2.8  C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm Thu Jun 27 19:14:49 2024
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(39): warning: Register r18 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(40): warning: Register r19 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(41): warning: Register r20 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(42): warning: Register r21 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(43): warning: Register r22 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(44): warning: Register r23 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(45): warning: Register r24 already defined by the .DEF directive
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(46): warning: Register r25 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(39): warning: Register r18 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(40): warning: Register r19 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(41): warning: Register r20 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(42): warning: Register r21 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(43): warning: Register r22 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(44): warning: Register r23 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(45): warning: Register r24 already defined by the .DEF directive
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(46): warning: Register r25 already defined by the .DEF directive
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\etapas_integradas.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
+C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas\TPI_Gonzalez_Gonzalez_V1.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328pdef.inc'
                                  
                                  ;
                                  
@@ -1202,7 +1202,7 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
 00006e 9508                      	ret
                                  
                                  timer1_conf_A:														; rutina de configuracion del timer 1 para rutina de match con OCR1A
-00006f e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)						 
+00006f e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)						; modo CTC preescaler 1024
 000070 9300 0081                 	sts TCCR1B, AUX1
 000072 e002                      	ldi AUX1, (1<<OCIE1A)											; habilito interrupcion de match con OCR1A
 000073 9300 006f                 	sts TIMSK1, AUX1
@@ -1210,11 +1210,11 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
 000076 9300 0089                 	sts OCR1AH, AUX1
 000078 e804                      	ldi AUX1, low(7812)	
 000079 9300 0088                 	sts OCR1AL, AUX1
-00007b e016                      	ldi CONT, CANT
+00007b e016                      	ldi CONT, CANT													; cargo en el contador la cantidad de veces que debe funcionar ejecutarse la interrupcion
 00007c 9508                      	ret
                                  
-                                 timer1_conf_B:
-00007d e10e                      	ldi AUX1, high(7811)
+                                 timer1_conf_B:														; rutina que configura el timer 1 para producir ejecucion de autotrigger del adc
+00007d e10e                      	ldi AUX1, high(7811)											; un valor previo al reinicio por match con OCR1A
 00007e 9300 008b                 	sts OCR1BH, AUX1
 000080 e803                      	ldi AUX1, low(7811)	
 000081 9300 008a                 	sts OCR1BL, AUX1
@@ -1224,10 +1224,10 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
 000086 e804                      	ldi AUX1, low(7812)	
 000087 9300 0088                 	sts OCR1AL, AUX1
                                  
-000089 e004                      	ldi AUX1, (1<<OCIE1B);
+000089 e004                      	ldi AUX1, (1<<OCIE1B);											; habilito flag de interruocion de match B
 00008a 9300 006f                 	sts TIMSK1, AUX1
                                  
-00008c e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)
+00008c e00d                      	ldi AUX1, (1<<WGM12)|(1<<CS12)|(1<<CS10)						; modo CTC preescaler 1024
 00008d 9300 0081                 	sts TCCR1B, AUX1
                                  
 00008f 2700                      	clr AUX1
@@ -1426,7 +1426,7 @@ C:\Users\leone\Documents\repos\TP-integrador\etapas_integradas\etapas_integradas
 000117 df79                      	rcall conf_ADC
 000118 df64                      	rcall timer1_conf_B
 000119 2700                      	clr AUX1
-00011a 9300 00c1                 	sts UCSR0B, AUX1
+00011a 9300 00c1                 	sts UCSR0B, AUX1						; desconecto usart para que no interfiera en las otras etapas
                                  
                                  salir_int_timer1:
 00011c 9518                      	reti

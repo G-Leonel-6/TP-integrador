@@ -15,7 +15,7 @@
     <Name>etapas_integradas</Name>
     <RootNamespace>etapas_integradas</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\etapas_integradas.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\TPI_Gonzalez_Gonzalez_V1.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -79,7 +79,7 @@
     <Compile Include="etapas_integradas %281%29.asm">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="etapas_integradas.asm">
+    <Compile Include="TPI_Gonzalez_Gonzalez_V1.asm">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="etapa3.asm">
